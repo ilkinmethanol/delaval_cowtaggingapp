@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AndroidLayouts">
+    <shared>
+      <config>
+        <device id="Nexus 6P" />
+        <device id="pixel_3_xl" />
+        <device id="pixel" />
+        <device id="pixel_2" />
+        <device id="Nexus 6" />
+        <device id="Nexus 7 2013" />
+        <pickBest>false</pickBest>
+        <target>android-29</target>
+      </config>
+    </shared>
+  </component>
+  <component name="AndroidLogFilters">
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="8bac5664-1fce-4cd7-ab6d-7f44fa45ac0c" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="Pixel_2_API_27" />
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view />
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="layoutResourceFile" />
+        <option value="resourceFile" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="ProjectId" id="1WevIJ3WIPt6gcnVHJhn6AnBUS5" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="DeviceAndSnapshotComboBoxAction.selectedDevice" value="CO2BA81205001713" />
+    <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2020-01-28T09:36:51.484Z" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="android.sdk.path" value="$USER_HOME$/AppData/Local/Android/Sdk" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="project.structure.last.edited" value="Dependencies" />
+    <property name="project.structure.proportion" value="0.17" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+  </component>
+  <component name="RecentsManager">
+    <key name="android.template.-1616550617">
+      <recent name="com.pozyx.nfctool" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.pozyx.nfctool" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\PC\Downloads\app\src\main\res\font" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="AndroidJUnit" factoryName="Android JUnit">
+      <option name="TEST_OBJECT" value="class" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <method v="2">
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="app" type="AndroidRunConfigurationType" factoryName="Android App" activateToolWindowBeforeRun="false">
+      <module name="app" />
+      <option name="DEPLOY" value="true" />
+      <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
+      <option name="DEPLOY_AS_INSTANT" value="false" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="PM_INSTALL_OPTIONS" value="" />
+      <option name="DYNAMIC_FEATURES_DISABLED_LIST" value="" />
+      <option name="ACTIVITY_EXTRA_FLAGS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
+      <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true" />
+      <option name="FORCE_STOP_RUNNING_APP" value="true" />
+      <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
+      <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
+      <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
+      <option name="DEBUGGER_TYPE" value="Auto" />
+      <Auto>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Auto>
+      <Hybrid>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Hybrid>
+      <Java />
+      <Native>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Native>
+      <Profilers>
+        <option name="ADVANCED_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_CONFIGURATION_NAME" value="Sample Java Methods" />
+      </Profilers>
+      <option name="DEEP_LINK" value="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <method v="2">
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="8bac5664-1fce-4cd7-ab6d-7f44fa45ac0c" name="Default Changelist" comment="" />
+      <created>1579522794017</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1579522794017</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="2056" y="120" width="384" height="629" key="#com.intellij.ide.util.MemberChooser" timestamp="1592923907587">
+      <screen x="1366" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2056" y="120" width="384" height="629" key="#com.intellij.ide.util.MemberChooser/0.31.1366.737/1366.0.1920.1080@1366.0.1920.1080" timestamp="1592923907587" />
+    <state x="491" y="113" width="384" height="580" key="#com.intellij.ide.util.MemberChooser/0.31.1366.737@0.31.1366.737" timestamp="1592858458085" />
+    <state x="2061" y="290" width="534" height="506" key="#com.intellij.refactoring.typeMigration.ui.FailedConversionsDialog" timestamp="1592924610235">
+      <screen x="1366" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2061" y="290" width="534" height="506" key="#com.intellij.refactoring.typeMigration.ui.FailedConversionsDialog/0.31.1366.737/1366.0.1920.1080@1366.0.1920.1080" timestamp="1592924610235" />
+    <state x="529" y="31" width="367" height="737" key="FileChooserDialogImpl" timestamp="1592856571522">
+      <screen x="0" y="31" width="1366" height="737" />
+    </state>
+    <state x="2109" y="300" width="434" height="487" key="FileChooserDialogImpl/0.31.1366.737/1366.0.1920.1080@1366.0.1920.1080" timestamp="1592837265961" />
+    <state x="529" y="31" width="367" height="737" key="FileChooserDialogImpl/0.31.1366.737@0.31.1366.737" timestamp="1592856571522" />
+    <state x="1986" y="370" key="com.intellij.ide.util.TipDialog" timestamp="1592896571967">
+      <screen x="1366" y="0" width="1920" height="1080" />
+    </state>
+    <state x="1986" y="370" key="com.intellij.ide.util.TipDialog/0.31.1366.737/1366.0.1920.1080@1366.0.1920.1080" timestamp="1592896571967" />
+    <state x="441" y="283" key="com.intellij.ide.util.TipDialog/0.31.1366.737@0.31.1366.737" timestamp="1592855108176" />
+    <state x="2024" y="168" width="609" height="750" key="refactoring.ChangeSignatureDialog" timestamp="1592905726396">
+      <screen x="1366" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2024" y="168" width="609" height="750" key="refactoring.ChangeSignatureDialog/0.31.1366.737/1366.0.1920.1080@1366.0.1920.1080" timestamp="1592905726396" />
+    <state x="1985" y="247" key="run.anything.popup" timestamp="1592827089502">
+      <screen x="1366" y="0" width="1920" height="1080" />
+    </state>
+    <state x="1985" y="247" key="run.anything.popup/0.31.1366.737/1366.0.1920.1080@1366.0.1920.1080" timestamp="1592827089502" />
+    <state x="1991" y="240" width="672" height="678" key="search.everywhere.popup" timestamp="1592923704061">
+      <screen x="1366" y="0" width="1920" height="1080" />
+    </state>
+    <state x="1991" y="240" width="672" height="678" key="search.everywhere.popup/0.31.1366.737/1366.0.1920.1080@1366.0.1920.1080" timestamp="1592923704061" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/InsertCowIdPage.java</url>
+          <line>152</line>
+          <option name="timeStamp" value="20" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>

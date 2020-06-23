@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:id="@+id/activity_options_page_id">
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="match_parent"
+        android:layout_height="101dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="-95dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginRight="0dp"
+        android:gravity="center_horizontal"
+        app:srcCompat="@drawable/ic_delaval" />
+
+    <TextView
+        android:id="@+id/insertCowIdText"
+        android:layout_width="161dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView4"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="82dp"
+        android:fontFamily="@font/helveticabold"
+        android:text="INSERT COW ID:"
+        android:textColor="@color/colorPrimaryDelaval"
+        android:textSize="20dp" />
+
+    <EditText
+        android:id="@+id/cowIdInput"
+        android:layout_width="327dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/insertCowIdText"
+        android:ems="10"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:hint=""
+        android:inputType="text"
+        android:fontFamily="@font/helveticabold"
+        android:textColor="#000000"
+        android:textColorHint="#414241"
+        app:backgroundTint="#414241"/>
+
+    <Button
+        android:id="@+id/submitButton2"
+        android:layout_width="327dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cowIdInput"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginStart="45dp"
+        android:layout_marginLeft="45dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="45dp"
+        android:layout_marginRight="45dp"
+        android:background="@drawable/button_save"
+        android:fontFamily="@font/helveticabold"
+        android:onClick="saveButtonCowId"
+        android:text="Submit"
+        android:textColor="#FFFFFF" />
+
+    <Button
+        android:id="@+id/cancelButton2"
+        android:layout_width="327dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/submitButton2"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginStart="45dp"
+        android:layout_marginLeft="45dp"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="45dp"
+        android:layout_marginRight="45dp"
+        android:background="@drawable/button_cancel"
+        android:fontFamily="@font/helveticabold"
+        android:onClick="cancelButtonCowId"
+        android:text="Cancel"
+        android:textColor="@color/colorPrimaryDelaval" />
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:id="@+id/loadingCircle"
+        android:layout_marginTop="20dp"
+        android:clickable="false"/>
+
+    <TextView
+        android:id="@+id/loadingText"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/helveticabold"
+        android:text="Your location is being determined. It may take up to couple minutes. Please wait."
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimaryDelaval"
+        android:textSize="16dp"
+        android:clickable="false"/>
+
+</LinearLayout>

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:id="@+id/activity_options_page_id">
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="match_parent"
+        android:layout_height="101dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="-60dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginRight="0dp"
+        android:gravity="center_horizontal"
+        app:srcCompat="@drawable/ic_delaval" />
+
+
+
+    <!--    <Switch
+            android:id="@+id/switch2"
+            android:layout_width="234dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_below="@+id/textview_first3"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="44dp"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="@font/helveticabold"
+            android:text="Camera Recognition" />-->
+
+    <Switch
+        android:id="@+id/activateSwitch"
+        android:layout_width="234dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/switch2"
+        android:layout_marginTop="30dp"
+
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="44dp"
+        android:fontFamily="@font/helveticabold"
+        android:text="Auto-Activate tags" />
+
+    <TextView
+        android:id="@+id/farmIdText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/activateSwitch"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="106dp"
+        android:fontFamily="@font/helveticabold"
+        android:text="FARM NAME:"
+        android:textColor="@color/colorPrimaryDelaval"
+        android:textSize="18sp" />
+
+    <com.toptoche.searchablespinnerlibrary.SearchableSpinner
+        android:layout_width="327dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/endpointText"
+        android:id="@+id/dropdown"
+        android:fontFamily="@font/helveticabold"
+        />
+
+    <!--    <EditText
+            android:id="@+id/farmIdInput"
+            android:layout_width="327dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/farmIdText"
+            android:ems="10"
+            android:hint="FARM ID"
+            android:inputType="text"
+            android:fontFamily="@font/helveticabold"
+            android:textColor="#000000"
+            android:textColorHint="#414241"
+            app:backgroundTint="#414241"/>-->
+
+    <TextView
+        android:id="@+id/endpointText"
+        android:layout_width="100dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="111dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dropdown"
+        android:fontFamily="@font/helveticabold"
+        android:text="PROFILES:"
+        android:textColor="@color/colorPrimaryDelaval"
+        android:textSize="18sp" />
+
+    <Spinner
+        android:layout_width="327dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/endpointText"
+        android:id="@+id/dropdown_profiles"
+        android:fontFamily="@font/helveticabold"
+        />
+
+    <!--    <EditText-->
+    <!--        android:id="@+id/endpointInput"-->
+    <!--        android:layout_width="327dp"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_below="@+id/endpointText"-->
+    <!--        android:hint="ENDPOINT"-->
+    <!--        android:inputType="text"-->
+    <!--        android:textColor="#000000"-->
+    <!--        android:textColorHint="#414241"-->
+    <!--        app:backgroundTint="#414241"-->
+    <!--        android:fontFamily="@font/helveticabold"/>-->
+
+
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="327dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/endpointInput"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginStart="45dp"
+        android:layout_marginLeft="45dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="45dp"
+        android:layout_marginRight="45dp"
+        android:background="@drawable/button_save"
+        android:fontFamily="@font/helveticabold"
+        android:text="Save"
+        android:onClick="finishAfterSaveButton"
+        android:textColor="#FFFFFF" />
+
+    <Button
+        android:id="@+id/cancelButton"
+        android:layout_width="327dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/saveButton"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginStart="45dp"
+        android:layout_marginLeft="45dp"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="45dp"
+        android:layout_marginRight="45dp"
+        android:background="@drawable/button_cancel"
+        android:fontFamily="@font/helveticabold"
+        android:text="Cancel"
+        android:onClick="finishAfterCancelButton"
+        android:textColor="@color/colorPrimaryDelaval" />
+
+
+</LinearLayout>
