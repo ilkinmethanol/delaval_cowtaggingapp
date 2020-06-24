@@ -18,6 +18,7 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.pozyx.nfctool.Util.FarmModel;
 import com.pozyx.nfctool.Util.FarmsHelper;
 import com.pozyx.nfctool.Util.ProfileModel;
@@ -185,8 +186,18 @@ public class OptionsPage extends AppCompatActivity implements CompoundButton.OnC
                                 profileModel.setProfilename(user.getString("profilename"));
                                 profileModel.setProfileid(user.getString("profileid"));
 
+                                List<ProfileModel.Config> profconf = new ArrayList<>();
+                                JSONObject confobject = user.getJSONObject("profileconfig");
 
+                                ProfileModel.Config Profileconf = new ProfileModel.Config();
 
+                                Profileconf.setSamples_interval(confobject.optString("samples_interval","0"));
+                                Profileconf.setAgg_alg(confobject.optString("agg_alg","0"));
+                                Profileconf.setMinimum_activeblinks(confobject.optString("minimum_activeblinks","0"));
+                                Profileconf.setMinimumlevel_activeblinks(confobject.optString("minimumlevel_activeblinks","0"));
+                                profconf.add(Profileconf);
+
+                                profileModel.setProfileconfig(profconf);
 
                                 pr_list.add(profileModel);
                             }
@@ -230,29 +241,21 @@ public class OptionsPage extends AppCompatActivity implements CompoundButton.OnC
         /*EditText farmid = (EditText)optionsView.findViewById(R.id.farmIdInput);*/
         final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor editor = pref.edit();
-        /*String valueOfFarmIdInput = farmid.getText().toString();
-        editor.putString("farmid", valueOfFarmIdInput);
-        editor.commit();
-        String wartosc = pref.getString("farmid", "123");*/
 
-
-
-
-//        editor.commit();
-//        String wartosc2 = pref.getString("endpoint", "");
 
         SearchableSpinner spinner = (SearchableSpinner)optionsView.findViewById(R.id.dropdown);
         String selectedItem = spinner.getSelectedItem().toString();
         String selectedItem_profiles = spinner_profiles.getSelectedItem().toString();
+        String profileid = get_profile_id(selectedItem_profiles);
+        String prf_config = get_profile_congif(selectedItem_profiles);
         editor.putString("farmName", selectedItem);
         editor.putString("profilename", selectedItem_profiles);
-
+        editor.putString("profileid",profileid);
+        editor.putString("configjson",prf_config);
         editor.commit();
 
-
-
-        Toast.makeText(this, "Settings have been saved!"+selectedItem_profiles, Toast.LENGTH_SHORT).show();
-        Intent scan_tagpage = new Intent(OptionsPage.this,MenuPage.class);
+        Toast.makeText(this, "Settings have been saved!"+prf_config, Toast.LENGTH_SHORT).show();
+        Intent scan_tagpage = new Intent(OptionsPage.this,ScanningPage.class);
         finish();
         startActivity(scan_tagpage);
     }
@@ -273,6 +276,29 @@ public class OptionsPage extends AppCompatActivity implements CompoundButton.OnC
                 editor.commit();
                 break;
         }
+    }
+
+    public String  get_profile_id(String name){
+        String profileid = "";
+        for (int i = 0; i<pr_list.size(); i++){
+            if (pr_list.get(i).profilename == name){
+                profileid = pr_list.get(i).profileid;
+            }
+        }
+        return profileid;
+    }
+
+    public String get_profile_congif(String profilename){
+        ProfileModel pm = new ProfileModel();
+        for (int i = 0; i<pr_list.size(); i++){
+            if (pr_list.get(i).profilename == profilename){
+                pm = pr_list.get(i);
+            }
+        }
+        Gson gson = new Gson();
+        gson.toJson(pm);
+
+        return gson.toJson(pm);
     }
 
     public void onResume() {

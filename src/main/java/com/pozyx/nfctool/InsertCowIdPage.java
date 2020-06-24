@@ -465,6 +465,7 @@ public class InsertCowIdPage extends AppCompatActivity  {
     }
 
     public void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
         if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
             // drop NFC events
         }

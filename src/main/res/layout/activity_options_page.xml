@@ -20,23 +20,6 @@
         android:gravity="center_horizontal"
         app:srcCompat="@drawable/ic_delaval" />
 
-
-
-    <!--    <Switch
-            android:id="@+id/switch2"
-            android:layout_width="234dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:layout_below="@+id/textview_first3"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="44dp"
-            android:layout_marginBottom="10dp"
-            android:fontFamily="@font/helveticabold"
-            android:text="Camera Recognition" />-->
-
     <Switch
         android:id="@+id/activateSwitch"
         android:layout_width="234dp"
@@ -160,3 +143,5 @@
 
 
 </LinearLayout>
+
+    

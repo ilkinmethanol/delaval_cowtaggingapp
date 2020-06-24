@@ -39,12 +39,18 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.pozyx.nfctool.Util.DeleteTask;
 import com.pozyx.nfctool.Util.FarmsHelper;
 import com.pozyx.nfctool.Util.NfcWrapper;
 import com.pozyx.nfctool.Util.PostTask;
 import com.pozyx.nfctool.Util.TagSetting;
 import com.pozyx.nfctool.Util.TagSettings;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -237,11 +243,26 @@ public class SettingsPage extends AppCompatActivity {
                         return;
                     }
                     try {
-                        settings.set_setting("Threshold",12123);
-                        settings.set_setting("Samples per interval",0);
-                        settings.set_setting("Aggregation algorithm",0);
-                        settings.set_setting("Minimum active blinks",3);
-                        settings.set_setting("Minimum level active blinks",0);
+
+                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                        String prfconf_json = prefs.getString("configjson","");
+
+                        JSONObject jObj = new JSONObject(prfconf_json);
+                        JSONArray jsonArry = jObj.getJSONArray("profileconfig");
+
+                        JSONObject configobj = jsonArry.getJSONObject(0);
+
+                        Integer mem_samples_interval = Integer.parseInt(configobj.optString("samples_interval"));
+                        Integer mem_agg_alg = Integer.parseInt(configobj.optString("agg_alg"));
+                        Integer mem_min_active_blinks = Integer.parseInt(configobj.optString("minimum_activeblinks"));
+                        Integer mem_minlevel_active_blinks = Integer.parseInt(configobj.optString("minimumlevel_activeblinks"));
+
+
+                        settings.set_setting("Threshold",12124);
+                        settings.set_setting("Samples per interval",mem_samples_interval);
+                        settings.set_setting("Aggregation algorithm",mem_agg_alg);
+                        settings.set_setting("Minimum active blinks",mem_min_active_blinks);
+                        settings.set_setting("Minimum level active blinks",mem_minlevel_active_blinks);
 
 
 //                        tag_memory.setText(settings.get_setting("Tg"));
@@ -250,13 +271,11 @@ public class SettingsPage extends AppCompatActivity {
                         nfc.writeBlocks(nfcvTag, changedBlocks);
                         nfc.sendInterrupt(nfcvTag);
                         nfcvTag.close();
-                        showToast("Written successfully");
+                        showToast("Written successfully"+prfconf_json);
                     } catch (IOException | NullPointerException e) {
                         showToast("Keep tag close to mobile!"+e.toString());
-                    } catch (NumberFormatException e) {
+                    } catch (Exception e) {
                         showToast(e.getMessage());
-                    } catch (ParseException e) {
-                        e.printStackTrace();
                     }
 
                     final Handler handler = new Handler();
@@ -282,7 +301,10 @@ public class SettingsPage extends AppCompatActivity {
                     try {
                         final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                         Long idValue = settings.get_setting("Id");
-                        Intent intent = new Intent(SettingsPage.this, InsertCowIdPage.class);
+
+                        SharedPreferences.Editor editor = pref.edit();
+                        editor.putString("Id",idValue.toString());
+                        Intent intent = new Intent(SettingsPage.this, MenuPage.class);
                         intent.putExtra("Id", Long.toString(idValue));
                         startActivity(intent);
                     } catch (Exception e){

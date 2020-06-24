@@ -23,6 +23,15 @@ import com.pozyx.nfctool.Util.NfcWrapper;
 import com.pozyx.nfctool.Util.PostTask;
 import com.pozyx.nfctool.Util.TagSettings;
 import com.pozyx.nfctool.Util.ProfileModel;
+import com.squareup.okhttp.Call;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.Response;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
@@ -64,30 +73,30 @@ public class MenuPage extends AppCompatActivity {
         associateCowBtn = (Button) findViewById(R.id.associate_cow_btn);
         unassociateCowBtn = (Button) findViewById(R.id.unassociate_cow_btn);
 
-        //make nfcV object and read some data
-        Tag tag = getIntent().getParcelableExtra(NfcAdapter.EXTRA_TAG);
-        nfcvTag = NfcV.get(tag);
-        mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
-        mPendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
-
-        getWindow().setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
-        //get data passed from NFCRequirementsPage
-
-        byte[] settingsBytes = (byte[])getIntent().getSerializableExtra("TagSettingsBytes");
-        if (settingsBytes == null){
-            settingsBytes = nfc.readSettingsBlocks(nfcvTag);
-        }
-
-        settings = new TagSettings();
-        if (settingsBytes.length != 0) {
-            settings.deserialize(settingsBytes);
-        }
-
+//        //make nfcV object and read some data
+//        Tag tag = getIntent().getParcelableExtra(NfcAdapter.EXTRA_TAG);
+//        nfcvTag = NfcV.get(tag);
+//        mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
+//        mPendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+//
+//        getWindow().setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+//
+//        //get data passed from NFCRequirementsPage
+//
+//        byte[] settingsBytes = (byte[])getIntent().getSerializableExtra("TagSettingsBytes");
+//        if (settingsBytes == null){
+//            settingsBytes = nfc.readSettingsBlocks(nfcvTag);
+//        }
+//
+//        settings = new TagSettings();
+//        if (settingsBytes.length != 0) {
+//            settings.deserialize(settingsBytes);
+//        }
+//
         viewInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent settingsPage = new Intent(MenuPage.this,PinEnter.class);
+                Intent settingsPage = new Intent(MenuPage.this,ScanningPage.class);
                 startActivity(settingsPage);
             }
         });
@@ -98,6 +107,7 @@ public class MenuPage extends AppCompatActivity {
                 try {
                     final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                     Long idValue = settings.get_setting("Id");
+
                     Intent intent = new Intent(MenuPage.this, InsertCowIdPage.class);
                     intent.putExtra("Id", Long.toString(idValue));
                     startActivity(intent);
@@ -108,59 +118,38 @@ public class MenuPage extends AppCompatActivity {
         });
 
         unassociateCowBtn.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
-                final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                Log.i("TESTING", "endpoint: " + endpointValue);
+                Toast.makeText(getApplicationContext(),"Cow unassociated from tag.", Toast.LENGTH_LONG);
+                endpointValue = "https://4fm1sus9w2.execute-api.eu-west-1.amazonaws.com/dev/pozyxtag";
 
-                farmNameValue = pref.getString("farmName", "default").replace(" - ", ".");
-                Log.i("TESTING", "farmName: " + farmNameValue);
-
-                farmidValue = findFarm(farmNameValue).vcId;
-                Log.i("TESTING", "farmid: " + farmidValue);
-
-                cowidValue = "";
-
-
+                MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+                RequestBody body = RequestBody.create(JSON, "{'farmid':'123', 'profiledata':'123312', 'animalid':'12333', 'hardwareid':'32312'}");
                 try {
-                    responseCode = new PostTask().execute(endpointValue, cowidValue="", tagidValue, farmidValue, farmNameValue="", "None","None").get();
-                } catch (ExecutionException e) {
-                    responseCode = null;
-                } catch (InterruptedException e) {
-                    responseCode = null;
-                    e.printStackTrace();
+                    OkHttpClient client = new OkHttpClient();
+
+                    Request request = new Request.Builder()
+                            .url(endpointValue)
+                            .post(body)
+                            .addHeader("Content-Type", "application/json") //Notice this request has header if you don't need to send a header just erase this part
+                            .build();
+                    Call call = client.newCall(request);
+                    call.enqueue(new Callback() {
+                        @Override
+                        public void onFailure(Request request, IOException e) {
+                            Toast.makeText(getApplicationContext(),"Error on posting "+e.toString(),Toast.LENGTH_LONG);
+                        }
+
+                        @Override
+                        public void onResponse(Response response) throws IOException {
+                            Toast.makeText(getApplicationContext(),"Posted",Toast.LENGTH_LONG);
+                        }
+                    });
                 }
-
-                if (responseCode == null) {
-                    Toast.makeText(MenuPage.this, "Error! Make sure your endpoint URL is correct!", Toast.LENGTH_LONG).show();
-                } else if (responseCode == 200 || responseCode == 201 || responseCode == 204) {
-                    Intent intent = new Intent(getApplicationContext(), ScanningPage.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    finish();
-                    Toast.makeText(getApplicationContext(),"Tag unassociated from cow", Toast.LENGTH_SHORT).show();
-                } else if (responseCode == 404) {
-                    Toast.makeText(MenuPage.this, "Endpoint not found!", Toast.LENGTH_SHORT).show();
-                } else if (responseCode == 401 || responseCode == 403) {
-                    Toast.makeText(MenuPage.this, "You are not authorized to access this endpoint!", Toast.LENGTH_LONG).show();
-                } else if (responseCode == 500) {
-                    Toast.makeText(MenuPage.this, "Server error!", Toast.LENGTH_SHORT).show();
-                } else if (responseCode == 400) {
-                    Toast.makeText(MenuPage.this, "Server error - 400", Toast.LENGTH_SHORT).show();
-                } else if (responseCode == 415) {
-                    Toast.makeText(MenuPage.this, "Server error - 415", Toast.LENGTH_SHORT).show();
-                } else if (responseCode == 409) {
-                    Toast.makeText(MenuPage.this, "This resource already exist!", Toast.LENGTH_SHORT).show();
-                } else if (responseCode == 408 || responseCode == 504) {
-                    Toast.makeText(MenuPage.this, "Server timeout!", Toast.LENGTH_SHORT).show();
-                } else {
-                    Intent intent = new Intent(getApplicationContext(), ScanningPage.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    Toast.makeText(MenuPage.this, "Error occurred - " + responseCode.toString(), Toast.LENGTH_LONG).show();
+                catch (Exception e){
+                    Toast.makeText(getApplicationContext(),"Error on posting "+e.toString(),Toast.LENGTH_LONG);
                 }
-
-
             }
         });
     }

@@ -56,7 +56,7 @@
         android:layout_marginRight="45dp"
         android:background="@drawable/button_save"
         android:fontFamily="@font/helveticabold"
-        android:onClick="saveButtonCowId"
+
         android:text="Associate cow"
         android:textColor="#FFFFFF" />
 
@@ -76,7 +76,7 @@
         android:layout_marginRight="45dp"
         android:background="@drawable/button_save"
         android:fontFamily="@font/helveticabold"
-        android:onClick="saveButtonCowId"
+
         android:text="Unassociate Cow"
         android:textColor="#FFFFFF" />
 
