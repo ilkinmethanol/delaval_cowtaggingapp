@@ -97,7 +97,7 @@
         android:textColor="@color/colorPrimaryDelaval"
         android:textSize="18sp" />
 
-    <Spinner
+    <com.toptoche.searchablespinnerlibrary.SearchableSpinner
         android:layout_width="327dp"
         android:layout_height="40dp"
         android:layout_below="@+id/endpointText"

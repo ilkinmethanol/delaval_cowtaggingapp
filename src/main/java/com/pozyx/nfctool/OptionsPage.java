@@ -44,9 +44,8 @@ public class OptionsPage extends AppCompatActivity implements CompoundButton.OnC
     private Button button2;
 
     private Switch activateSwitchButton;
-    Spinner spinner_profiles;
-    ProfileModel profileModel = new ProfileModel();
-    List<ProfileModel.Config> profiles_list = new ArrayList<ProfileModel.Config>();
+    SearchableSpinner spinner_profiles;
+    List<ProfileModel> pr_list = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,11 +59,7 @@ public class OptionsPage extends AppCompatActivity implements CompoundButton.OnC
 
         View v2 = findViewById(R.id.activity_options_page_id);
         final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        if (pref.getString("endpoint", null) == null) {
-            SharedPreferences.Editor editor = pref.edit();
-            editor.putString("endpoint", "https://z4554h0e4m.execute-api.eu-west-1.amazonaws.com/prod/item");
-            editor.commit();
-        }
+
 
         SearchableSpinner searchableSpinner = (SearchableSpinner)findViewById(R.id.dropdown);
         ArrayList<String> mStrings = new ArrayList<String>();
@@ -86,32 +81,23 @@ public class OptionsPage extends AppCompatActivity implements CompoundButton.OnC
         farmidText = name;*/
 
 
-        spinner_profiles = (Spinner)findViewById(R.id.dropdown_profiles);
-//        getHttpResponse();
+        spinner_profiles = (SearchableSpinner)findViewById(R.id.dropdown_profiles);
+        getHttpResponse();
 
-        List<ProfileModel> spinnermodel = new ArrayList<>();
-
-        ProfileModel.Config pmc = new ProfileModel.Config();
-        pmc.setSamples_interval("1");
-        pmc.setAgg_alg("1");
-        pmc.setMinimumlevel_activeblinks("0");
-        pmc.setMinimum_activeblinks("3");
-
-        ProfileModel pm1 = new ProfileModel();
-        pm1.setProfilename("GreatProfile");
-        pm1.setProfileid("55");
-//        pm1.setProfileconfig((List<ProfileModel.Config>) pmc);
-        spinnermodel.add(pm1);
-
-        ProfileModel pm2 = new ProfileModel();
-        pm2.setProfilename("GoodProfile");
-        pm2.setProfileid("56");
-//        pm2.setProfileconfig((List<ProfileModel.Config>) pmc);
-        spinnermodel.add(pm2);
-
-        ArrayAdapter<ProfileModel> adapter = new ArrayAdapter<ProfileModel>(OptionsPage.this, android.R.layout.simple_spinner_dropdown_item , spinnermodel);
+        ArrayAdapter adapter = new ArrayAdapter(OptionsPage.this, android.R.layout.simple_list_item_1 , pr_list);
 
         spinner_profiles.setAdapter(adapter);
+
+        if (!spinner_profiles.isSelected()){
+            spinner_profiles.setSelection(0);
+        }
+        else{
+            spinner_profiles.setSelection(getIndex(spinner_profiles,spinner_profiles.getSelectedItem().toString()));
+        }
+        spinner_profiles.setTitle("Select Profile");
+        spinner_profiles.setPositiveButton("OK");
+        String profileNamee = pref.getString("profileName","");
+        spinner_profiles.setSelection(getIndex(spinner_profiles, profileNamee));
 
         spinner_profiles.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -161,7 +147,7 @@ public class OptionsPage extends AppCompatActivity implements CompoundButton.OnC
         Toast.makeText(getApplicationContext(),data,Toast.LENGTH_LONG);
     }
 
-    public ProfileModel getHttpResponse() {
+    public List getHttpResponse() {
 
         String url = "https://4fm1sus9w2.execute-api.eu-west-1.amazonaws.com/dev/profiles";
 
@@ -187,7 +173,7 @@ public class OptionsPage extends AppCompatActivity implements CompoundButton.OnC
                     public void run() {
                         Log.e("Response", profilesresp);
                         try {
-                            Toast.makeText(getApplicationContext(),"I got profiles hohohoh", Toast.LENGTH_LONG);
+
                             JSONObject users = new JSONObject(profilesresp);
                             JSONArray usersArr = users.getJSONArray("profiles");
 
@@ -195,27 +181,15 @@ public class OptionsPage extends AppCompatActivity implements CompoundButton.OnC
 
                                 JSONObject user = usersArr.getJSONObject(i);
 
-
+                                ProfileModel profileModel = new ProfileModel();
                                 profileModel.setProfilename(user.getString("profilename"));
                                 profileModel.setProfileid(user.getString("profileid"));
 
 
 
-                                for (int j=0; j< user.getJSONArray("profileconfig").length(); j++){
-                                    ProfileModel.Config profconf = new ProfileModel.Config();
 
-                                    JSONObject confobject = user.getJSONArray("profileconfig").getJSONObject(j);
-                                    profconf.setSamples_interval(confobject.optString("samples_interval","0"));
-                                    profconf.setAgg_alg(confobject.optString("agg_alg","0"));
-                                    profconf.setMinimum_activeblinks(confobject.optString("minimum_activeblinks","0"));
-                                    profconf.setMinimumlevel_activeblinks(confobject.optString("minimumlevel_activeblinks","0"));
-
-                                    profiles_list.add(profconf);
-                                }
-                                profileModel.setProfileconfig(profiles_list);
+                                pr_list.add(profileModel);
                             }
-
-//                            catAdapter.notifyDataSetChanged();
 
 
                         } catch (JSONException e) {
@@ -226,7 +200,7 @@ public class OptionsPage extends AppCompatActivity implements CompoundButton.OnC
                 });
             }
         });
-        return profileModel;
+        return pr_list;
     }
 
     private int getIndex(Spinner spinner, String myString){
@@ -264,18 +238,23 @@ public class OptionsPage extends AppCompatActivity implements CompoundButton.OnC
 
 
 
-        editor.commit();
-        String wartosc2 = pref.getString("endpoint", "");
+//        editor.commit();
+//        String wartosc2 = pref.getString("endpoint", "");
 
         SearchableSpinner spinner = (SearchableSpinner)optionsView.findViewById(R.id.dropdown);
         String selectedItem = spinner.getSelectedItem().toString();
+        String selectedItem_profiles = spinner_profiles.getSelectedItem().toString();
         editor.putString("farmName", selectedItem);
+        editor.putString("profilename", selectedItem_profiles);
+
         editor.commit();
 
-        Toast.makeText(this, "Settings have been saved!", Toast.LENGTH_SHORT).show();
+
+
+        Toast.makeText(this, "Settings have been saved!"+selectedItem_profiles, Toast.LENGTH_SHORT).show();
         Intent scan_tagpage = new Intent(OptionsPage.this,MenuPage.class);
-        startActivity(scan_tagpage);
         finish();
+        startActivity(scan_tagpage);
     }
 
     @Override

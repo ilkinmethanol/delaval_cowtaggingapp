@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/app.iml" filepath="$PROJECT_DIR$/app.iml" group="app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/delaval_cowtaggingapp.iml" filepath="$PROJECT_DIR$/.idea/modules/delaval_cowtaggingapp.iml" group="delaval_cowtaggingapp" />
     </modules>
   </component>
 </project>
