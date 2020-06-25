@@ -7,58 +7,42 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.nfc.NfcAdapter;
-import android.nfc.Tag;
-import android.nfc.tech.NfcV;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.PersistableBundle;
 import android.os.SystemClock;
-import android.preference.PreferenceManager;
-import android.provider.Settings;
-import android.renderscript.ScriptIntrinsicYuvToRGB;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.PermissionChecker;
 
+import com.google.gson.Gson;
+import com.pozyx.nfctool.Util.AnimalAssociate;
 import com.pozyx.nfctool.Util.FarmModel;
 import com.pozyx.nfctool.Util.FarmsHelper;
-import com.pozyx.nfctool.Util.PostTask;
-import com.pozyx.nfctool.Util.TagSetting;
-import com.pozyx.nfctool.Util.TagSettings;
+import com.pozyx.nfctool.Util.ProfileConfig;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.Response;
 
-import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
+import java.io.IOException;
 
 public class InsertCowIdPage extends AppCompatActivity  {
 
@@ -69,14 +53,21 @@ public class InsertCowIdPage extends AppCompatActivity  {
     private String farmidValue;
     private String farmNameValue;
     private String tagidValue;
+    private String samplesInterval;
+    private String aggAlg;
+    private String minimumActiveblinks;
+    private String minimumlevelActiveblinks;
     private String cowidValue;
+    private String hardwareid;
+    private String animalid;
+    private String farmid;
     private Double latValue = 0.0;
     private Double lngValue = 0.0;
     private Integer responseCode;
     private Boolean isConnected;
     final int LOCATION_PERMISSION_REQUEST_CODE = 1252; //Note that the value 1252 is arbitrary.
     private LocationManager locationManager;
-
+    public AnimalAssociate animalAssociate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,12 +81,23 @@ public class InsertCowIdPage extends AppCompatActivity  {
         cowid = findViewById(R.id.cowIdInput);
         cowid.setRawInputType(Configuration.KEYBOARD_QWERTY);
 
+        samplesInterval  = "1";
+        aggAlg = "1";
+        minimumActiveblinks = "2";
+        minimumlevelActiveblinks = "3";
+        hardwareid = "123";
+        animalid = "321";
+        farmid = "9898";
+        ProfileConfig pc = new ProfileConfig(samplesInterval,aggAlg, minimumActiveblinks,minimumlevelActiveblinks);
+        animalAssociate = new AnimalAssociate(hardwareid, animalid, farmid, pc);
+
+        Toast.makeText(getApplicationContext(),samplesInterval+aggAlg+minimumActiveblinks+hardwareid+animalAssociate.getProfiledata().getAggAlg(),Toast.LENGTH_LONG);
 
         Intent intent = getIntent();
         String currentTextScan = intent.getExtras().getString("currentTextScan");
         //tagidValue = intent.getExtras().getString("Id");
-        tagidValue = intent.getExtras().getString("Id");
-        cowid.setText(currentTextScan);
+//        tagidValue = intent.getExtras().getString("Id");
+//        cowid.setText(currentTextScan);
         findViewById(R.id.cowIdInput).requestFocus();
         new Handler().postDelayed(new Runnable() {
 
@@ -187,127 +189,185 @@ public class InsertCowIdPage extends AppCompatActivity  {
         }
     }
 
-    public void saveButtonCowId(View view)
-    {
+    public void saveButtonCowId(View view) throws IOException {
+        Gson gs = new Gson();
+        String jsonObject = gs.toJson(animalAssociate);
+        cowidValue = cowid.getText().toString();
+        if (cowidValue.length() == 0 || cowidValue.length() > 6)
+        {
+            Toast.makeText(this, "Given CowID is incorrect!", Toast.LENGTH_LONG).show();
+            return;
+        }
+//        Toast.makeText(this, "Given CowID is correct!"+gs.toJson(animalAssociate), Toast.LENGTH_LONG).show();
+//        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://4fm1sus9w2.execute-api.eu-west-1.amazonaws.com/dev/").addConverterFactory(GsonConverterFactory.create()).build();
+//        RetroConfig retroConfig = retrofit.create(RetroConfig.class);
+//
+        OkHttpClient client = new OkHttpClient();
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        // put your json here
+        RequestBody body = RequestBody.create(JSON, jsonObject);
+        Request request = new Request.Builder()
+                .url("https://4fm1sus9w2.execute-api.eu-west-1.amazonaws.com/dev/pozyxtag")
+                .post(body)
+                .build();
+
+        Response response = client.newCall(request).execute();
         try {
-            hideKeyboard(InsertCowIdPage.this);
-            isConnected = isNetworkConnected();
-            if (isConnected) {
-
-
-                final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                endpointValue = pref.getString("endpoint", "https://z4554h0e4m.execute-api.eu-west-1.amazonaws.com/prod/item");
-                Log.i("TESTING", "endpoint: " + endpointValue);
-
-                farmNameValue = pref.getString("farmName", "default").replace(" - ", ".");
-                Log.i("TESTING", "farmName: " + farmNameValue);
-
-                farmidValue = findFarm(farmNameValue).vcId;
-                Log.i("TESTING", "farmid: " + farmidValue);
-
-                cowidValue = cowid.getText().toString();
-                if (cowidValue.length() == 0 || cowidValue.length() > 6)
-                {
-                    Toast.makeText(this, "Given CowID is incorrect!", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                Log.i("TESTING", "cowid: " + cowidValue);
-
-                Log.i("TESTING", "tagid: " + tagidValue);
-                Log.i("TESTING", "Latitude: " + FarmsHelper.FarmHelper.latValue);
-                Log.i("TESTING", "Longitude: " + FarmsHelper.FarmHelper.lngValue);
-
-
-                LocationManager lm = (LocationManager)getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
-                boolean gps_enabled = false;
-                boolean network_enabled = false;
-                gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-                network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-
-                if(!gps_enabled) {
-                    // notify user
-                    FarmsHelper.FarmHelper.latValue = 0.0;
-                    FarmsHelper.FarmHelper.lngValue = 0.0;
-                    new AlertDialog.Builder(InsertCowIdPage.this)
-                            .setMessage("GPS needs to be on. Enable it, please.")
-                            .setPositiveButton("Okay", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                                    startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                                }
-                            })
-                            .setNegativeButton("No",new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                                    return;
-                                }
-                            })
-                            .show();
-                    return;
-                }
-
-                if (FarmsHelper.FarmHelper.latValue == 0.0 || FarmsHelper.FarmHelper.lngValue == 0.0)
-                {
-                    findViewById(R.id.loadingText).setVisibility(View.VISIBLE);
-                    findViewById(R.id.loadingCircle).setVisibility(View.VISIBLE);
-                    return;
-                }
-
-                if (farmidValue.isEmpty() || farmidValue == null || farmidValue == "default") {
-                    Toast.makeText(InsertCowIdPage.this, "Missing Farm ID, please check Settings!", Toast.LENGTH_LONG).show();
-                } else if (endpointValue.isEmpty() || endpointValue == null || endpointValue == "default") {
-                    Toast.makeText(InsertCowIdPage.this, "Missing endpoint URL, please check Settings!", Toast.LENGTH_LONG).show();
-                } else if (cowidValue.isEmpty() || cowidValue == null) {
-                    Toast.makeText(InsertCowIdPage.this, "Missing Cow ID!", Toast.LENGTH_SHORT).show();
-                } else if (!URLUtil.isValidUrl(endpointValue)) {
-                    Toast.makeText(InsertCowIdPage.this, "Given endpoint URL is not valid!", Toast.LENGTH_SHORT).show();
-                } else if (!URLUtil.isValidUrl(endpointValue)) {
-                    Toast.makeText(InsertCowIdPage.this, "Given endpoint URL is not valid!", Toast.LENGTH_SHORT).show();
-                } else {
-                    try {
-                        responseCode = new PostTask().execute(endpointValue, cowidValue, tagidValue, farmidValue, farmNameValue, String.valueOf(FarmsHelper.FarmHelper.latValue), String.valueOf(FarmsHelper.FarmHelper.lngValue)).get();
-                    } catch (ExecutionException e) {
-                        responseCode = null;
-                    } catch (InterruptedException e) {
-                        responseCode = null;
-                        e.printStackTrace();
-                    }
-
-                    if (responseCode == null) {
-                        Toast.makeText(InsertCowIdPage.this, "Error! Make sure your endpoint URL is correct!", Toast.LENGTH_LONG).show();
-                    } else if (responseCode == 200 || responseCode == 201 || responseCode == 204) {
-                        Intent intent = new Intent(getApplicationContext(), ScanningPage.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                        finish();
-                        Toast.makeText(InsertCowIdPage.this, "Added successfully!", Toast.LENGTH_SHORT).show();
-                    } else if (responseCode == 404) {
-                        Toast.makeText(InsertCowIdPage.this, "Endpoint not found!", Toast.LENGTH_SHORT).show();
-                    } else if (responseCode == 401 || responseCode == 403) {
-                        Toast.makeText(InsertCowIdPage.this, "You are not authorized to access this endpoint!", Toast.LENGTH_LONG).show();
-                    } else if (responseCode == 500) {
-                        Toast.makeText(InsertCowIdPage.this, "Server error!", Toast.LENGTH_SHORT).show();
-                    } else if (responseCode == 400) {
-                        Toast.makeText(InsertCowIdPage.this, "Server error - 400", Toast.LENGTH_SHORT).show();
-                    } else if (responseCode == 415) {
-                        Toast.makeText(InsertCowIdPage.this, "Server error - 415", Toast.LENGTH_SHORT).show();
-                    } else if (responseCode == 409) {
-                        Toast.makeText(InsertCowIdPage.this, "This resource already exist!", Toast.LENGTH_SHORT).show();
-                    } else if (responseCode == 408 || responseCode == 504) {
-                        Toast.makeText(InsertCowIdPage.this, "Server timeout!", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Intent intent = new Intent(getApplicationContext(), ScanningPage.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                        Toast.makeText(InsertCowIdPage.this, "Error occurred - " + responseCode.toString(), Toast.LENGTH_LONG).show();
-                    }
-                }
-            } else {
-                Toast.makeText(InsertCowIdPage.this, "No internet connection.", Toast.LENGTH_LONG).show();
+            if (response.isSuccessful()){
+                String resStr = response.body().string();
+                Toast.makeText(getApplicationContext(),resStr,Toast.LENGTH_LONG);
+            }
+            else{
+                int resStr = response.code();
+                Toast.makeText(getApplicationContext(),resStr,Toast.LENGTH_LONG);
             }
         } catch (Exception e) {
-            Toast.makeText(InsertCowIdPage.this, "Unexpected error occurred!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_LONG);
+            e.printStackTrace();
+
         }
+
+        return;
+
+//
+//        Call<AnimalAssociate> call = retroConfig.call(animalAssociate);
+//        try {
+//            call.enqueue(new Callback<AnimalAssociate>() {
+//                @Override
+//                public void onResponse(Call<AnimalAssociate> call, Response<AnimalAssociate> response) {
+//                    if (response.code() == 200 || response.code() == 201){
+//                        Toast.makeText(getApplicationContext(), Integer.toString(response.code()),Toast.LENGTH_LONG);
+//                        return;
+//                    }
+//                    else{
+//                        Toast.makeText(getApplicationContext(),"Errors here",Toast.LENGTH_LONG);
+//                        return;
+//                    }
+//                }
+//
+//                @Override
+//                public void onFailure(Call<AnimalAssociate> call, Throwable t) {
+//                    Toast.makeText(getApplicationContext(), t.getMessage() ,Toast.LENGTH_LONG);
+//                }
+//            });
+//        }catch (Exception e){
+//
+//        }
+
+//        try {
+//            hideKeyboard(InsertCowIdPage.this);
+//            isConnected = isNetworkConnected();
+//            if (isConnected) {
+//
+//                final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+//                endpointValue = pref.getString("endpoint", "https://4fm1sus9w2.execute-api.eu-west-1.amazonaws.com/dev/pozyxtag");
+//
+//                farmNameValue = pref.getString("farmName", "default").replace(" - ", ".");
+//
+//                farmidValue = findFarm(farmNameValue).vcId;
+//
+//                cowidValue = cowid.getText().toString();
+//                if (cowidValue.length() == 0 || cowidValue.length() > 6)
+//                {
+//                    Toast.makeText(this, "Given CowID is incorrect!", Toast.LENGTH_LONG).show();
+//                    return;
+//                }
+//                Log.i("TESTING", "Latitude: " + FarmsHelper.FarmHelper.latValue);
+//                Log.i("TESTING", "Longitude: " + FarmsHelper.FarmHelper.lngValue);
+//
+//
+//                LocationManager lm = (LocationManager)getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+//                boolean gps_enabled = false;
+//                boolean network_enabled = false;
+//                gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+//                network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+//
+//                if(!gps_enabled) {
+//                    // notify user
+//                    FarmsHelper.FarmHelper.latValue = 0.0;
+//                    FarmsHelper.FarmHelper.lngValue = 0.0;
+//                    new AlertDialog.Builder(InsertCowIdPage.this)
+//                            .setMessage("GPS needs to be on. Enable it, please.")
+//                            .setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+//                                    startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+//                                }
+//                            })
+//                            .setNegativeButton("No",new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+//                                    return;
+//                                }
+//                            })
+//                            .show();
+//                    return;
+//                }
+//
+//                if (FarmsHelper.FarmHelper.latValue == 0.0 || FarmsHelper.FarmHelper.lngValue == 0.0)
+//                {
+//                    findViewById(R.id.loadingText).setVisibility(View.VISIBLE);
+//                    findViewById(R.id.loadingCircle).setVisibility(View.VISIBLE);
+//                    return;
+//                }
+//
+//                if (farmidValue.isEmpty() || farmidValue == null || farmidValue == "default") {
+//                    Toast.makeText(InsertCowIdPage.this, "Missing Farm ID, please check Settings!", Toast.LENGTH_LONG).show();
+//                } else if (endpointValue.isEmpty() || endpointValue == null || endpointValue == "default") {
+//                    Toast.makeText(InsertCowIdPage.this, "Missing endpoint URL, please check Settings!", Toast.LENGTH_LONG).show();
+//                } else if (cowidValue.isEmpty() || cowidValue == null) {
+//                    Toast.makeText(InsertCowIdPage.this, "Missing Cow ID!", Toast.LENGTH_SHORT).show();
+//                } else if (!URLUtil.isValidUrl(endpointValue)) {
+//                    Toast.makeText(InsertCowIdPage.this, "Given endpoint URL is not valid!", Toast.LENGTH_SHORT).show();
+//                } else if (!URLUtil.isValidUrl(endpointValue)) {
+//                    Toast.makeText(InsertCowIdPage.this, "Given endpoint URL is not valid!", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    try {
+//
+//                        responseCode = new PostTask().execute(endpointValue, cowidValue, tagidValue, farmidValue, farmNameValue, String.valueOf(FarmsHelper.FarmHelper.latValue), String.valueOf(FarmsHelper.FarmHelper.lngValue)).get();
+//
+//                    } catch (ExecutionException e) {
+//                        responseCode = null;
+//                    } catch (InterruptedException e) {
+//                        responseCode = null;
+//                        e.printStackTrace();
+//                    }
+//
+//                    if (responseCode == null) {
+//                        Toast.makeText(InsertCowIdPage.this, "Error! Make sure your endpoint URL is correct!", Toast.LENGTH_LONG).show();
+//                    } else if (responseCode == 200 || responseCode == 201 || responseCode == 204) {
+//                        Intent intent = new Intent(getApplicationContext(), ScanningPage.class);
+//                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                        startActivity(intent);
+//                        finish();
+//                        Toast.makeText(InsertCowIdPage.this, "Added successfully!", Toast.LENGTH_SHORT).show();
+//                    } else if (responseCode == 404) {
+//                        Toast.makeText(InsertCowIdPage.this, "Endpoint not found!", Toast.LENGTH_SHORT).show();
+//                    } else if (responseCode == 401 || responseCode == 403) {
+//                        Toast.makeText(InsertCowIdPage.this, "You are not authorized to access this endpoint!", Toast.LENGTH_LONG).show();
+//                    } else if (responseCode == 500) {
+//                        Toast.makeText(InsertCowIdPage.this, "Server error!", Toast.LENGTH_SHORT).show();
+//                    } else if (responseCode == 400) {
+//                        Toast.makeText(InsertCowIdPage.this, "Server error - 400", Toast.LENGTH_SHORT).show();
+//                    } else if (responseCode == 415) {
+//                        Toast.makeText(InsertCowIdPage.this, "Server error - 415", Toast.LENGTH_SHORT).show();
+//                    } else if (responseCode == 409) {
+//                        Toast.makeText(InsertCowIdPage.this, "This resource already exist!", Toast.LENGTH_SHORT).show();
+//                    } else if (responseCode == 408 || responseCode == 504) {
+//                        Toast.makeText(InsertCowIdPage.this, "Server timeout!", Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        Intent intent = new Intent(getApplicationContext(), ScanningPage.class);
+//                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                        startActivity(intent);
+//                        Toast.makeText(InsertCowIdPage.this, "Error occurred - " + responseCode.toString(), Toast.LENGTH_LONG).show();
+//                    }
+//                }
+//            } else {
+//                Toast.makeText(InsertCowIdPage.this, "No internet connection.", Toast.LENGTH_LONG).show();
+//            }
+//        } catch (Exception e) {
+//            Toast.makeText(InsertCowIdPage.this, "Unexpected error occurred!", Toast.LENGTH_SHORT).show();
+//        }
     }
 
     private void setLocation(double latitude, double langitude)

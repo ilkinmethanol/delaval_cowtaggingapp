@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.JsonObject;
 import com.pozyx.nfctool.Util.FarmModel;
 import com.pozyx.nfctool.Util.FarmsHelper;
 import com.pozyx.nfctool.Util.NfcWrapper;
@@ -25,11 +26,14 @@ import com.pozyx.nfctool.Util.TagSettings;
 import com.pozyx.nfctool.Util.ProfileModel;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -106,8 +110,8 @@ public class MenuPage extends AppCompatActivity {
             public void onClick(View view) {
                 try {
                     final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                    Long idValue = settings.get_setting("Id");
-
+//                    Long idValue = settings.get_setting("Id");
+                    Long idValue = 20L;
                     Intent intent = new Intent(MenuPage.this, InsertCowIdPage.class);
                     intent.putExtra("Id", Long.toString(idValue));
                     startActivity(intent);
@@ -121,17 +125,32 @@ public class MenuPage extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(),"Cow unassociated from tag.", Toast.LENGTH_LONG);
+
                 endpointValue = "https://4fm1sus9w2.execute-api.eu-west-1.amazonaws.com/dev/pozyxtag";
 
+                
+
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("farmid","123");
+                    jsonObject.put("profiledata","123312");
+                    jsonObject.put("animalid","123");
+                    jsonObject.put("hardwareid","123ssdfs");
+                }
+
+
+                catch (Exception e){
+
+                }
                 MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-                RequestBody body = RequestBody.create(JSON, "{'farmid':'123', 'profiledata':'123312', 'animalid':'12333', 'hardwareid':'32312'}");
+                RequestBody rb = RequestBody.create(JSON,jsonObject.toString());
+                Toast.makeText(getApplicationContext(),"Cow unassociated from tag.", Toast.LENGTH_LONG);
                 try {
                     OkHttpClient client = new OkHttpClient();
 
                     Request request = new Request.Builder()
                             .url(endpointValue)
-                            .post(body)
+                            .post(rb)
                             .addHeader("Content-Type", "application/json") //Notice this request has header if you don't need to send a header just erase this part
                             .build();
                     Call call = client.newCall(request);
