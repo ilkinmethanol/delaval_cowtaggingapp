@@ -131,7 +131,7 @@ public class ScanningPage extends AppCompatActivity {
                 NfcWrapper nfc = new NfcWrapper();
                 byte[] settings_bytes = nfc.readSettingsBlocks(nfcvTag);
 
-                Intent settings_intent = new Intent(ScanningPage.this, SettingsPage.class);
+                Intent settings_intent = new Intent(ScanningPage.this, MenuPage.class);
                 settings_intent.putExtra("TagSettingsBytes", settings_bytes);
                 settings_intent.putExtra(NfcAdapter.EXTRA_TAG, tag);
 

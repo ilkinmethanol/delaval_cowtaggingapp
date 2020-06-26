@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.pozyx.nfctool.Util.FarmManagement;
+import com.pozyx.nfctool.Util.ProfileConfig;
 import com.pozyx.nfctool.Util.ProfileModel;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
@@ -58,9 +59,6 @@ public class OptionsPage extends AppCompatActivity implements CompoundButton.OnC
         setContentView(R.layout.activity_options_page);
         getSupportActionBar().setTitle("Settings");
 
-
-
-//        farms = FarmsHelper.FarmHelper.farms;
 
         View v2 = findViewById(R.id.activity_options_page_id);
         final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -233,10 +231,7 @@ public class OptionsPage extends AppCompatActivity implements CompoundButton.OnC
                             for(int i =0; i < farmsArr.length(); i++){
                                 JSONObject farm = farmsArr.getJSONObject(i);
 
-                                FarmManagement farmModel = new FarmManagement();
-                                farmModel.setFarmid(farm.getString("farm_id"));
-                                farmModel.setFarmname(farm.getString("name"));
-
+                                FarmManagement farmModel = new FarmManagement(farm.getString("name"),farm.getString("farm_id"));
                                 fr_list.add(farmModel);
                             }
 

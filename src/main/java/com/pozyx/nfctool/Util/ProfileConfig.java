@@ -85,6 +85,7 @@ public class ProfileConfig {
 //        this.minimumtriggercount = minimumtriggercount;
     }
 
+
     public String getMinimumlevelActiveblinks() {
         return minimumlevelActiveblinks;
     }

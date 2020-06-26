@@ -19,35 +19,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8bac5664-1fce-4cd7-ab6d-7f44fa45ac0c" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/AssociateCow.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/Util/FarmManagement.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/res/layout/activity_associate_cow.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/fileHashes/resourceHashesCache.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/classAnalysis.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/jarAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/jarAnalysis.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/javaCompile.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/taskHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules/delaval_cowtaggingapp.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/delaval_cowtaggingapp.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/InsertCowIdPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/InsertCowIdPage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/MenuPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/MenuPage.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/OptionsPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/OptionsPage.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/ScanningPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/ScanningPage.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/SettingsPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/SettingsPage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/ThisApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/ThisApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/Util/AnimalAssociate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/Util/AnimalAssociate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/Util/FarmModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/Util/FarmModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/Util/PostTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/Util/PostTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/Util/FarmManagement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/Util/FarmManagement.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/Util/ProfileConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/Util/ProfileConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/Util/ProfileModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/Util/ProfileModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_insert_cow_id_page.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_insert_cow_id_page.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_menu_page.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_menu_page.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_options_page.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_options_page.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_settings_page.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_settings_page.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -257,10 +244,10 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="491" y="113" width="384" height="629" key="#com.intellij.ide.util.MemberChooser" timestamp="1593124762246">
-      <screen x="0" y="31" width="1366" height="737" />
+    <state x="2056" y="120" width="384" height="629" key="#com.intellij.ide.util.MemberChooser" timestamp="1593161949135">
+      <screen x="1366" y="0" width="1920" height="1080" />
     </state>
-    <state x="2056" y="120" width="384" height="629" key="#com.intellij.ide.util.MemberChooser/0.31.1366.737/1366.0.1920.1080@1366.0.1920.1080" timestamp="1593086067483" />
+    <state x="2056" y="120" width="384" height="629" key="#com.intellij.ide.util.MemberChooser/0.31.1366.737/1366.0.1920.1080@1366.0.1920.1080" timestamp="1593161949135" />
     <state x="491" y="113" width="384" height="580" key="#com.intellij.ide.util.MemberChooser/0.31.1366.737@0.31.1366.737" timestamp="1593124762246" />
     <state x="2061" y="290" width="534" height="506" key="#com.intellij.refactoring.typeMigration.ui.FailedConversionsDialog" timestamp="1592924610235">
       <screen x="1366" y="0" width="1920" height="1080" />

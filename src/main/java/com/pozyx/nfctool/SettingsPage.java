@@ -63,7 +63,6 @@ public class SettingsPage extends AppCompatActivity {
     private PendingIntent mPendingIntent ;
     private NfcV nfcvTag;
     private Boolean DEACTIVATE = true;
-    private TextView tag_memory;
     private TextView UIDChange, enabledChange,idChange,percentChange, sleepChange, variationChange, settingsChange,accChange,channelChange,preambleChange,datarateChange,prfChange;
     private ProgressBar progressChange;
     private Button activateButton;
@@ -447,12 +446,12 @@ public class SettingsPage extends AppCompatActivity {
     }
 
     private void readTextFromMessage(NdefMessage ndefMessage) {
-        tag_memory = (TextView)findViewById(R.id.tagMemory);
+
         NdefRecord[] ndefRecords = ndefMessage.getRecords();
         if (ndefRecords != null && ndefRecords.length>0){
             NdefRecord ndefRecord = ndefRecords[0];
             String tagContent = getTextFromNdefRecord(ndefRecord);
-            tag_memory.setText(tagContent);
+
         }else {
             Toast.makeText(this, "No data NDEF found in tag!", Toast.LENGTH_SHORT).show();
         }

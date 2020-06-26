@@ -89,6 +89,17 @@ public class ProfileModel {
             this.minimumlevel_activeblinks = minimumlevel_activeblinks;
         }
 
+        public Config() {
+        }
+    }
+
+    public ProfileModel(String profileid, String profilename, List<Config> profileconfig) {
+        this.profileid = profileid;
+        this.profilename = profilename;
+        this.profileconfig = profileconfig;
+    }
+
+    public ProfileModel() {
     }
 
     @Override

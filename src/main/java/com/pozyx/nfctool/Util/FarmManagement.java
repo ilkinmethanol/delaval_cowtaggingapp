@@ -4,7 +4,7 @@ public class FarmManagement {
     private String farmname;
     private String farmid;
 
-    public FarmManagement() {
+    public FarmManagement(String farmname, String farmid) {
         this.farmname = farmname;
         this.farmid = farmid;
     }

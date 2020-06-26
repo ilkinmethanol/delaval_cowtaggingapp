@@ -53,6 +53,7 @@
         android:layout_below="@+id/endpointText"
         android:id="@+id/dropdown"
         android:fontFamily="@font/helveticabold"
+
         />
 
     <!--    <EditText
@@ -86,6 +87,7 @@
         android:layout_below="@+id/endpointText"
         android:id="@+id/dropdown_profiles"
         android:fontFamily="@font/helveticabold"
+
         />
 
     <!--    <EditText-->
