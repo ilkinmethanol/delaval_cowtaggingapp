@@ -28,7 +28,6 @@
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/MenuPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/MenuPage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/ScanningPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/ScanningPage.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

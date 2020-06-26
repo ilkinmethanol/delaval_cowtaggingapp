@@ -136,12 +136,11 @@ public class MenuPage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                 tagidValue = prefs.getString("Id","Nulldata");
                 farmidValue = prefs.getString("farmid","Null");
                 Toast.makeText(getApplicationContext(),"Unassociated from tag"+farmidValue,Toast.LENGTH_LONG).show();
-                AnimalAssociate animalAssociate = new AnimalAssociate(tagidValue,"123465");
+                AnimalAssociate animalAssociate = new AnimalAssociate(tagidValue,farmidValue);
                 Gson gs = new Gson();
                 String jsonObject = gs.toJson(animalAssociate);
 
