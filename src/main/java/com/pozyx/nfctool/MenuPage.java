@@ -106,7 +106,13 @@ public class MenuPage extends AppCompatActivity {
         viewInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent settingsPage = new Intent(MenuPage.this,ScanningPage.class);
+                Tag tag = getIntent().getParcelableExtra(NfcAdapter.EXTRA_TAG);
+                byte[] settingsBytes = (byte[])getIntent().getSerializableExtra("TagSettingsBytes");
+
+                Intent settingsPage = new Intent(MenuPage.this,SettingsPage.class);
+
+                settingsPage.putExtra("TagSettingsBytes", settingsBytes);
+                settingsPage.putExtra(NfcAdapter.EXTRA_TAG, tag);
                 startActivity(settingsPage);
             }
         });

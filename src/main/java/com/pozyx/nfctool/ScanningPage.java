@@ -6,6 +6,7 @@ import android.app.AppOpsManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.nfc.NdefMessage;
@@ -22,6 +23,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -119,6 +121,7 @@ public class ScanningPage extends AppCompatActivity {
     @Override
     public void onNewIntent(Intent intent) { //this is called when a tag is discovered
         try {
+
             super.onNewIntent(intent);
             tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG); //get the tag object from new intent
             //make nfcV object
@@ -132,7 +135,9 @@ public class ScanningPage extends AppCompatActivity {
                 byte[] settings_bytes = nfc.readSettingsBlocks(nfcvTag);
 
                 Intent settings_intent = new Intent(ScanningPage.this, MenuPage.class);
+
                 settings_intent.putExtra("TagSettingsBytes", settings_bytes);
+
                 settings_intent.putExtra(NfcAdapter.EXTRA_TAG, tag);
 
 

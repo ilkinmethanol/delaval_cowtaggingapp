@@ -27,15 +27,8 @@
       <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/javaCompile.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/OptionsPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/OptionsPage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/MenuPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/MenuPage.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/ScanningPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/ScanningPage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/SettingsPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/SettingsPage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/Util/FarmManagement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/Util/FarmManagement.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/Util/ProfileConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/Util/ProfileConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/Util/ProfileModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/Util/ProfileModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_menu_page.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_menu_page.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_options_page.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_options_page.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_settings_page.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_settings_page.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
