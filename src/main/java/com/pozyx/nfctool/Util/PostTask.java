@@ -29,46 +29,25 @@ import java.util.TimeZone;
 
 public class PostTask extends AsyncTask<String, Void, Integer> {
     private String endpoint;
-    private String cowid;
-    private String tagid;
-    private String farmid;
-    private String farmName;
-    private Integer status;
-    private Double latValue;
-    private Double lngValue;
 
+    private String body;
+    private Integer status;
     @Override
     protected Integer doInBackground(String... params) {
         byte[] result = null;
         String str = "";
         // Create a new HttpClient and Post Header
         endpoint = params[0];
-        cowid = params[1];
-        tagid = params[2];
-        farmid = params[3];
-        farmName = params[4];
-        latValue = Double.parseDouble(params[5]);
-        lngValue = Double.parseDouble(params[6]);
+        body = params[1];
+//        latValue = Double.parseDouble(params[5]);
+//        lngValue = Double.parseDouble(params[6]);
         HttpClient httpclient = new DefaultHttpClient();
         HttpPost httppost = new HttpPost(endpoint);
 
 
         try {
-            postData data = new postData();
 
-            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-            df.setTimeZone(TimeZone.getTimeZone("UTC"));
-            String utcTime = df.format(new Date());
-
-            data.cowId = cowid;
-            data.tagId = tagid;
-            data.farmId = farmid;
-            data.latitude = latValue.toString();
-            data.longitude = lngValue.toString();
-            data.delProVersion = "2";
-
-            Gson gson= new Gson();
-            StringEntity postingString = new StringEntity(gson.toJson(data));
+            StringEntity postingString = new StringEntity(body);
 
             //String json = gson.toJson(data);
 
@@ -88,51 +67,3 @@ public class PostTask extends AsyncTask<String, Void, Integer> {
         return status;
     }
 }
-
-class postModel
-{
-    postData Item;
-    String TableName;
-}
-
-class postData
-{
-    String cowId;
-    String tagId;
-    String farmId;
-    String latitude;
-    String delProVersion;
-    String longitude;
-}
-
-class cowID
-{
-    String S;
-}
-class tagID
-{
-    String S;
-}
-class farmID
-{
-    String S;
-    String Name;
-}
-class latitude
-{
-    String lat;
-}
-class langitude
-{
-    String lng;
-}
-class timestamp
-{
-    String S;
-}
-class farmRegVar
-{
-    String S;
-}
-
-

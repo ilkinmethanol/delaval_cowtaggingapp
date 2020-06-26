@@ -7,42 +7,70 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.nfc.NfcAdapter;
+import android.nfc.Tag;
+import android.nfc.tech.NfcV;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PersistableBundle;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
+import android.provider.Settings;
+import android.renderscript.ScriptIntrinsicYuvToRGB;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.PermissionChecker;
 
 import com.google.gson.Gson;
 import com.pozyx.nfctool.Util.AnimalAssociate;
 import com.pozyx.nfctool.Util.FarmModel;
 import com.pozyx.nfctool.Util.FarmsHelper;
+import com.pozyx.nfctool.Util.PostTask;
 import com.pozyx.nfctool.Util.ProfileConfig;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
+import com.pozyx.nfctool.Util.TagSetting;
+import com.pozyx.nfctool.Util.TagSettings;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class InsertCowIdPage extends AppCompatActivity  {
 
@@ -58,6 +86,8 @@ public class InsertCowIdPage extends AppCompatActivity  {
     private String minimumActiveblinks;
     private String minimumlevelActiveblinks;
     private String cowidValue;
+    private String threshold;
+    private String minimum_trigger_count;
     private String hardwareid;
     private String animalid;
     private String farmid;
@@ -67,8 +97,8 @@ public class InsertCowIdPage extends AppCompatActivity  {
     private Boolean isConnected;
     final int LOCATION_PERMISSION_REQUEST_CODE = 1252; //Note that the value 1252 is arbitrary.
     private LocationManager locationManager;
+    private ProfileConfig pc;
     public AnimalAssociate animalAssociate;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,23 +111,17 @@ public class InsertCowIdPage extends AppCompatActivity  {
         cowid = findViewById(R.id.cowIdInput);
         cowid.setRawInputType(Configuration.KEYBOARD_QWERTY);
 
-        samplesInterval  = "1";
-        aggAlg = "1";
-        minimumActiveblinks = "2";
-        minimumlevelActiveblinks = "3";
-        hardwareid = "123";
-        animalid = "321";
-        farmid = "9898";
-        ProfileConfig pc = new ProfileConfig(samplesInterval,aggAlg, minimumActiveblinks,minimumlevelActiveblinks);
-        animalAssociate = new AnimalAssociate(hardwareid, animalid, farmid, pc);
-
-        Toast.makeText(getApplicationContext(),samplesInterval+aggAlg+minimumActiveblinks+hardwareid+animalAssociate.getProfiledata().getAggAlg(),Toast.LENGTH_LONG);
 
         Intent intent = getIntent();
-        String currentTextScan = intent.getExtras().getString("currentTextScan");
+//        String currentTextScan ;
+//        if (intent!=null && intent.getExtras()!=null){
+//            currentTextScan = intent.getExtras().getString("currentTextScan","");
+//        }
         //tagidValue = intent.getExtras().getString("Id");
-//        tagidValue = intent.getExtras().getString("Id");
-//        cowid.setText(currentTextScan);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+//         cowid.setText(currentTextScan);
         findViewById(R.id.cowIdInput).requestFocus();
         new Handler().postDelayed(new Runnable() {
 
@@ -189,7 +213,24 @@ public class InsertCowIdPage extends AppCompatActivity  {
         }
     }
 
-    public void saveButtonCowId(View view) throws IOException {
+    public void saveButtonCowId(View view)
+    {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+        tagidValue = prefs.getString("Id","Nulldata");
+        samplesInterval  = prefs.getString("mem_samples_interval","0");
+        aggAlg = prefs.getString("mem_agg_alg","0");
+        minimumActiveblinks = prefs.getString("mem_min_active_blinks","0");
+        minimumlevelActiveblinks = prefs.getString("mem_minlevel_active_blinks","0");
+        threshold = prefs.getString("mem_threshold","0");
+        minimum_trigger_count = prefs.getString("mem_minimum_trigger_count","0");
+        hardwareid = tagidValue;
+        animalid = cowid.getText().toString();
+        farmid = prefs.getString("farmid","0");
+//        minimum_trigger_count,threshold
+        ProfileConfig pc = new ProfileConfig(samplesInterval,aggAlg, minimumActiveblinks,minimumlevelActiveblinks);
+        animalAssociate = new AnimalAssociate(hardwareid, animalid, farmid, pc);
+
         Gson gs = new Gson();
         String jsonObject = gs.toJson(animalAssociate);
         cowidValue = cowid.getText().toString();
@@ -198,6 +239,8 @@ public class InsertCowIdPage extends AppCompatActivity  {
             Toast.makeText(this, "Given CowID is incorrect!", Toast.LENGTH_LONG).show();
             return;
         }
+        Toast.makeText(getApplicationContext(),"Animal associated successfully",Toast.LENGTH_LONG).show();
+//
 //        Toast.makeText(this, "Given CowID is correct!"+gs.toJson(animalAssociate), Toast.LENGTH_LONG).show();
 //        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://4fm1sus9w2.execute-api.eu-west-1.amazonaws.com/dev/").addConverterFactory(GsonConverterFactory.create()).build();
 //        RetroConfig retroConfig = retrofit.create(RetroConfig.class);
@@ -211,60 +254,37 @@ public class InsertCowIdPage extends AppCompatActivity  {
                 .post(body)
                 .build();
 
-        Response response = client.newCall(request).execute();
-        try {
-            if (response.isSuccessful()){
-                String resStr = response.body().string();
-                Toast.makeText(getApplicationContext(),resStr,Toast.LENGTH_LONG);
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                return;
             }
-            else{
-                int resStr = response.code();
-                Toast.makeText(getApplicationContext(),resStr,Toast.LENGTH_LONG);
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    Toast.makeText(InsertCowIdPage.this, "Added successfully!"+response.body().string(), Toast.LENGTH_SHORT).show();
+                }
             }
-        } catch (Exception e) {
-            Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_LONG);
-            e.printStackTrace();
+        });
 
-        }
 
-        return;
-
-//
-//        Call<AnimalAssociate> call = retroConfig.call(animalAssociate);
-//        try {
-//            call.enqueue(new Callback<AnimalAssociate>() {
-//                @Override
-//                public void onResponse(Call<AnimalAssociate> call, Response<AnimalAssociate> response) {
-//                    if (response.code() == 200 || response.code() == 201){
-//                        Toast.makeText(getApplicationContext(), Integer.toString(response.code()),Toast.LENGTH_LONG);
-//                        return;
-//                    }
-//                    else{
-//                        Toast.makeText(getApplicationContext(),"Errors here",Toast.LENGTH_LONG);
-//                        return;
-//                    }
-//                }
-//
-//                @Override
-//                public void onFailure(Call<AnimalAssociate> call, Throwable t) {
-//                    Toast.makeText(getApplicationContext(), t.getMessage() ,Toast.LENGTH_LONG);
-//                }
-//            });
-//        }catch (Exception e){
-//
-//        }
 
 //        try {
 //            hideKeyboard(InsertCowIdPage.this);
 //            isConnected = isNetworkConnected();
 //            if (isConnected) {
 //
+//
 //                final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 //                endpointValue = pref.getString("endpoint", "https://4fm1sus9w2.execute-api.eu-west-1.amazonaws.com/dev/pozyxtag");
+//                Log.i("TESTING", "endpoint: " + endpointValue);
 //
 //                farmNameValue = pref.getString("farmName", "default").replace(" - ", ".");
+//                Log.i("TESTING", "farmName: " + farmNameValue);
 //
 //                farmidValue = findFarm(farmNameValue).vcId;
+//                Log.i("TESTING", "farmid: " + farmidValue);
 //
 //                cowidValue = cowid.getText().toString();
 //                if (cowidValue.length() == 0 || cowidValue.length() > 6)
@@ -272,6 +292,9 @@ public class InsertCowIdPage extends AppCompatActivity  {
 //                    Toast.makeText(this, "Given CowID is incorrect!", Toast.LENGTH_LONG).show();
 //                    return;
 //                }
+//                Log.i("TESTING", "cowid: " + cowidValue);
+//
+//                Log.i("TESTING", "tagid: " + tagidValue);
 //                Log.i("TESTING", "Latitude: " + FarmsHelper.FarmHelper.latValue);
 //                Log.i("TESTING", "Longitude: " + FarmsHelper.FarmHelper.lngValue);
 //
@@ -323,9 +346,9 @@ public class InsertCowIdPage extends AppCompatActivity  {
 //                    Toast.makeText(InsertCowIdPage.this, "Given endpoint URL is not valid!", Toast.LENGTH_SHORT).show();
 //                } else {
 //                    try {
-//
-//                        responseCode = new PostTask().execute(endpointValue, cowidValue, tagidValue, farmidValue, farmNameValue, String.valueOf(FarmsHelper.FarmHelper.latValue), String.valueOf(FarmsHelper.FarmHelper.lngValue)).get();
-//
+//                        Gson gs = new Gson();
+//                        String jsonObject = gs.toJson(animalAssociate);
+//                        responseCode = new PostTask().execute(endpointValue, jsonObject).get();
 //                    } catch (ExecutionException e) {
 //                        responseCode = null;
 //                    } catch (InterruptedException e) {
@@ -405,14 +428,7 @@ public class InsertCowIdPage extends AppCompatActivity  {
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
-    FarmModel findFarm(String codeIsIn) {
-        for(FarmModel farm : FarmsHelper.FarmHelper.farms) {
-            if(farm.shortName.equals(codeIsIn)) {
-                return farm;
-            }
-        }
-        return null;
-    }
+
 
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
 
@@ -468,6 +484,8 @@ public class InsertCowIdPage extends AppCompatActivity  {
             return null;
         }
     }*/
+
+
 
     private void buildAlertMessageNoGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);

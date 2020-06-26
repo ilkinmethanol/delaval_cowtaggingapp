@@ -67,7 +67,12 @@ public class SettingsPage extends AppCompatActivity {
     private TextView UIDChange, enabledChange,idChange,percentChange, sleepChange, variationChange, settingsChange,accChange,channelChange,preambleChange,datarateChange,prfChange;
     private ProgressBar progressChange;
     private Button activateButton;
-
+    private Integer mem_samples_interval;
+    private Integer mem_threshold;
+    private Integer mem_minimum_trigger_count;
+    private Integer mem_agg_alg;
+    private Integer mem_min_active_blinks;
+    private Integer mem_minlevel_active_blinks;
     private HashMap<String, TextView> settings_views;
     TagSettings settings;
     NfcWrapper nfc = new NfcWrapper();
@@ -115,13 +120,6 @@ public class SettingsPage extends AppCompatActivity {
             settings_table.setPadding(15,15,15,15);
             settings_views = new HashMap<String, TextView>();
 
-            TableRow uid_row = new TableRow(this);
-            TextView uid_name = new TextView(this);
-            TextView uid_value = new TextView(this);
-            //Typeface face = ResourcesCompat.getFont(this, R.font.azo_sans_regular);
-
-
-
             for (String setting_name : settings.settings_order) {
                 TagSetting setting = settings.settingsmap.get(setting_name);
                 TableRow row = new TableRow(this);
@@ -148,8 +146,30 @@ public class SettingsPage extends AppCompatActivity {
                     settings_table.addView(tv);
                 }
                 settings_table.addView(row);
+
+
             }
-            activateButton = findViewById(R.id.deactivateButton2);
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                final String prfconf_json = prefs.getString("configjson","");
+
+                JSONObject jObj = null;
+                JSONObject configobj = null;
+                try {
+                    jObj = new JSONObject(prfconf_json);
+                    JSONArray jsonArry = jObj.getJSONArray("profileconfig");
+
+                    configobj = jsonArry.getJSONObject(0);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                mem_samples_interval = Integer.parseInt(configobj.optString("samples_interval"));
+                mem_agg_alg = Integer.parseInt(configobj.optString("agg_alg"));
+                mem_min_active_blinks = Integer.parseInt(configobj.optString("minimum_activeblinks"));
+                mem_minlevel_active_blinks = Integer.parseInt(configobj.optString("minimumlevel_activeblinks"));
+//                mem_threshold = Integer.parseInt(configobj.optString("threshold"));
+//                mem_minimum_trigger_count = Integer.parseInt(configobj.optString("minimum_trigger_count"));
+                activateButton = findViewById(R.id.deactivateButton2);
 
             if (settings.get_setting("State") == 0){   //activateButton default state is Deactivate
                 DEACTIVATE = false;
@@ -205,6 +225,51 @@ public class SettingsPage extends AppCompatActivity {
                         }
                     }, 100);
 
+                    if (nfcvTag.isConnected()) { //check if tag is already busy
+                        showToast("Commands following too fast");
+                        try {
+                            nfcvTag.close();
+                        } catch (Exception e) {
+                        }
+                        ;
+                        return;
+                    }
+                    try {
+                        settings.set_setting("Samples per interval",mem_samples_interval);
+                        settings.set_setting("Aggregation algorithm",mem_agg_alg);
+                        settings.set_setting("Minimum active blinks",mem_min_active_blinks);
+                        settings.set_setting("Minimum level active blinks",mem_minlevel_active_blinks);
+                        settings.set_setting("Threshold",mem_threshold.shortValue());
+//                        settings.set_setting("Minimum Trigger Count",mem_minimum_trigger_count);
+
+//                        tag_memory.setText(settings.get_setting("Tg"));
+                        HashMap<Integer, byte[]> changedBlocks = settings.getChangedBlocks();
+                        nfcvTag.connect();
+                        nfc.writeBlocks(nfcvTag, changedBlocks);
+                        nfc.sendInterrupt(nfcvTag);
+                        nfcvTag.close();
+                        showToast("Written successfully"+prfconf_json);
+                    } catch (IOException | NullPointerException e) {
+                        showToast("Keep tag close to mobile!"+e.toString());
+                    } catch (Exception e) {
+                        showToast(e.getMessage());
+                    }
+
+                    final Handler handler2 = new Handler();
+                    handler2.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                //finally read the settings and update the view
+                                byte[] settingsBytes = nfc.readSettingsBlocks(nfcvTag);
+                                settings.deserialize(settingsBytes);
+                                updateView();
+                            } catch (Exception e) {
+
+                            }
+                        }
+                    }, 100);
+
                 }
             });
 
@@ -243,27 +308,12 @@ public class SettingsPage extends AppCompatActivity {
                         return;
                     }
                     try {
-
-                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                        String prfconf_json = prefs.getString("configjson","");
-
-                        JSONObject jObj = new JSONObject(prfconf_json);
-                        JSONArray jsonArry = jObj.getJSONArray("profileconfig");
-
-                        JSONObject configobj = jsonArry.getJSONObject(0);
-
-                        Integer mem_samples_interval = Integer.parseInt(configobj.optString("samples_interval"));
-                        Integer mem_agg_alg = Integer.parseInt(configobj.optString("agg_alg"));
-                        Integer mem_min_active_blinks = Integer.parseInt(configobj.optString("minimum_activeblinks"));
-                        Integer mem_minlevel_active_blinks = Integer.parseInt(configobj.optString("minimumlevel_activeblinks"));
-
-
-                        settings.set_setting("Threshold",12124);
                         settings.set_setting("Samples per interval",mem_samples_interval);
                         settings.set_setting("Aggregation algorithm",mem_agg_alg);
                         settings.set_setting("Minimum active blinks",mem_min_active_blinks);
                         settings.set_setting("Minimum level active blinks",mem_minlevel_active_blinks);
-
+//                        settings.set_setting("Threshold",mem_threshold.shortValue());
+//                        settings.set_setting("Minimum Trigger Count",mem_minimum_trigger_count);
 
 //                        tag_memory.setText(settings.get_setting("Tg"));
                         HashMap<Integer, byte[]> changedBlocks = settings.getChangedBlocks();
@@ -300,12 +350,20 @@ public class SettingsPage extends AppCompatActivity {
                 public void onClick(View v) {
                     try {
                         final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                        Long idValue = settings.get_setting("Id");
+                        Long idValue = settings.settingsmap.get("Id").getValue();
 
                         SharedPreferences.Editor editor = pref.edit();
-                        editor.putString("Id",idValue.toString());
+                        editor.putString("Id",String.valueOf(idValue));
+                        editor.putString("mem_samples_interval", String.valueOf(mem_samples_interval));
+                        editor.putString("mem_agg_alg", String.valueOf(mem_agg_alg));
+                        editor.putString("mem_min_active_blinks", String.valueOf(mem_min_active_blinks));
+                        editor.putString("mem_minlevel_active_blinks", String.valueOf(mem_minlevel_active_blinks));
+//                        editor.putString("mem_minimum_trigger_count", String.valueOf(mem_minimum_trigger_count));
+//                        editor.putString("mem_threshold", String.valueOf(mem_threshold));
+
+                        editor.commit();
                         Intent intent = new Intent(SettingsPage.this, MenuPage.class);
-                        intent.putExtra("Id", Long.toString(idValue));
+                        intent.putExtra("Id", String.valueOf(idValue));
                         startActivity(intent);
                     } catch (Exception e){
                         showToast("Unexpected error occurred!");
@@ -313,32 +371,32 @@ public class SettingsPage extends AppCompatActivity {
                 }
             });
 
-        findViewById(R.id.deleteButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    Long idValue = settings.get_setting("Id");
-                    String tagId = Long.toString(idValue);
-                    Integer responseCode = new DeleteTask().execute("https://z4554h0e4m.execute-api.eu-west-1.amazonaws.com/prod/item/", tagId).get();
-                    if (responseCode == 200 || responseCode == 202 || responseCode == 204)
-                    {
-                        Toast.makeText(SettingsPage.this, "Tag deleted!", Toast.LENGTH_LONG).show();
-                    }
-                    else
-                    {
-                        Toast.makeText(SettingsPage.this, "Tag not found on server to delete.", Toast.LENGTH_LONG).show();
-                    }
-
-                    Intent intent = new Intent(getApplicationContext(), ScanningPage.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    finish();
-                    startActivity(intent);
-
-                } catch (Exception e){
-                    showToast("Keep tag close to mobile!");
-                }
-            }
-        });
+//        findViewById(R.id.deleteButton).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                try {
+//                    Long idValue = settings.get_setting("Id");
+//                    String tagId = Long.toString(idValue);
+//                    Integer responseCode = new DeleteTask().execute("https://z4554h0e4m.execute-api.eu-west-1.amazonaws.com/prod/item/", tagId).get();
+//                    if (responseCode == 200 || responseCode == 202 || responseCode == 204)
+//                    {
+//                        Toast.makeText(SettingsPage.this, "Tag deleted!", Toast.LENGTH_LONG).show();
+//                    }
+//                    else
+//                    {
+//                        Toast.makeText(SettingsPage.this, "Tag not found on server to delete.", Toast.LENGTH_LONG).show();
+//                    }
+//
+//                    Intent intent = new Intent(getApplicationContext(), ScanningPage.class);
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                    finish();
+//                    startActivity(intent);
+//
+//                } catch (Exception e){
+//                    showToast("Keep tag close to mobile!");
+//                }
+//            }
+//        });
 
             final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             //get value for activateswitch from sharedpreferences and execute below block if it is on

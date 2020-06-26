@@ -8,15 +8,44 @@ public class ProfileConfig {
     @SerializedName("samples_interval")
     @Expose
     private String samplesInterval;
+
     @SerializedName("agg_alg")
     @Expose
     private String aggAlg;
+
     @SerializedName("minimum_activeblinks")
     @Expose
     private String minimumActiveblinks;
+
     @SerializedName("minimumlevel_activeblinks")
     @Expose
     private String minimumlevelActiveblinks;
+
+//
+//    @SerializedName("minimumlevel_activeblinks")
+//    @Expose
+//    private String threshold;
+//
+//
+//    @SerializedName("minimumlevel_activeblinks")
+//    @Expose
+//    private String minimumtriggercount;
+
+//    public String getThreshold() {
+//        return threshold;
+//    }
+//
+//    public void setThreshold(String threshold) {
+//        this.threshold = threshold;
+//    }
+//
+//    public String getMinimumtriggercount() {
+//        return minimumtriggercount;
+//    }
+//
+//    public void setMinimumtriggercount(String minimumtriggercount) {
+//        this.minimumtriggercount = minimumtriggercount;
+//    }
 
     public ProfileConfig() {
 
@@ -47,10 +76,13 @@ public class ProfileConfig {
     }
 
     public ProfileConfig(String samplesInterval, String aggAlg, String minimumActiveblinks, String minimumlevelActiveblinks) {
+//                         String minimumtriggercount, String threshold
         this.samplesInterval = samplesInterval;
         this.aggAlg = aggAlg;
         this.minimumActiveblinks = minimumActiveblinks;
         this.minimumlevelActiveblinks = minimumlevelActiveblinks;
+//        this.threshold = threshold;
+//        this.minimumtriggercount = minimumtriggercount;
     }
 
     public String getMinimumlevelActiveblinks() {

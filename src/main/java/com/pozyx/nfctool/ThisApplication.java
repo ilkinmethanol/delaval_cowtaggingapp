@@ -13,12 +13,11 @@ public class ThisApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        FarmsHelper.FarmHelper.GetFarms();
-        FarmModel farm = FarmsHelper.FarmHelper.farms.get(0);
-        final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        SharedPreferences.Editor editor = pref.edit();
-        String value = farm.shortName;
-        editor.putString("farmName", farm.shortName.replace(".", " - "));
-        editor.commit();
+//        FarmsHelper.FarmHelper.GetFarms();
+//        FarmModel farm = FarmsHelper.FarmHelper.farms.get(0);
+//        final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+//        SharedPreferences.Editor editor = pref.edit();
+//        editor.putString("farmName", farm.shortName.replace(".", " - "));
+//        editor.commit();
     }
 }

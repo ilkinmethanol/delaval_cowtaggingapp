@@ -38,6 +38,24 @@ public class ProfileModel {
         public String agg_alg;
         public String minimum_activeblinks;
         public String minimumlevel_activeblinks;
+        public String threshold;
+        public String minimum_trigger_count;
+
+        public String getThreshold() {
+            return threshold;
+        }
+
+        public void setThreshold(String threshold) {
+            this.threshold = threshold;
+        }
+
+        public String getMinimum_trigger_count() {
+            return minimum_trigger_count;
+        }
+
+        public void setMinimum_trigger_count(String minimum_trigger_count) {
+            this.minimum_trigger_count = minimum_trigger_count;
+        }
 
         public String getSamples_interval() {
             return samples_interval;

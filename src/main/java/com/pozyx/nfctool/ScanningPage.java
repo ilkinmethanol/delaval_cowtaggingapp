@@ -136,14 +136,6 @@ public class ScanningPage extends AppCompatActivity {
                 settings_intent.putExtra(NfcAdapter.EXTRA_TAG, tag);
 
 
-                String samples_per_interval = "0";
-                String minimum_trigger_count = "0";
-                String threshold = "0";
-                String aggregation_algorithm = "0";
-                String minimum_active_blinks = "0";
-                String minimum_level_active_blink = "0";
-
-
 //                NdefMessage ndefMessage = createNdefMessage("This is profileconfig data");
 //                writeNdefMessage(tag,ndefMessage);
 

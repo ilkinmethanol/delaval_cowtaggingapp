@@ -19,6 +19,11 @@ public class AnimalAssociate {
     @Expose
     private ProfileConfig profiledata;
 
+    public AnimalAssociate(String hardwareid,String farmid) {
+        this.hardwareid = hardwareid;
+        this.animalid = "";
+        this.farmid = farmid;
+    }
 
 
     public AnimalAssociate(String hardwareid, String animalid, String farmid, ProfileConfig profiledata) {
@@ -27,6 +32,7 @@ public class AnimalAssociate {
         this.farmid = farmid;
         this.profiledata = profiledata;
     }
+
 
     public String getHardwareid() {
         return hardwareid;

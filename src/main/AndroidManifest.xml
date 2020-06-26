@@ -19,7 +19,8 @@
         android:icon="@drawable/logo_delaval"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MenuPage"></activity>
+        <activity android:name=".AssociateCow"></activity>
+        <activity android:name=".MenuPage" />
         <activity android:name=".PinEnter">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,7 +30,7 @@
         </activity>
         <activity
             android:name=".NFCRequirementsPage"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ScanningPage"
             android:screenOrientation="portrait" />
@@ -47,7 +48,7 @@
         </activity>
         <activity
             android:name=".InsertCowIdPage"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

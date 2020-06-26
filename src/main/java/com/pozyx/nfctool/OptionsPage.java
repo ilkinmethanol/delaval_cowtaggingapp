@@ -19,8 +19,7 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.pozyx.nfctool.Util.FarmModel;
-import com.pozyx.nfctool.Util.FarmsHelper;
+import com.pozyx.nfctool.Util.FarmManagement;
 import com.pozyx.nfctool.Util.ProfileModel;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
@@ -35,6 +34,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class OptionsPage extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, Serializable {
@@ -46,7 +46,11 @@ public class OptionsPage extends AppCompatActivity implements CompoundButton.OnC
 
     private Switch activateSwitchButton;
     SearchableSpinner spinner_profiles;
+    SearchableSpinner spinner_farms;
     List<ProfileModel> pr_list = new ArrayList<>();
+    List<FarmManagement> fr_list = new ArrayList<>();
+
+//    List<FarmModel> farms;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,40 +58,41 @@ public class OptionsPage extends AppCompatActivity implements CompoundButton.OnC
         setContentView(R.layout.activity_options_page);
         getSupportActionBar().setTitle("Settings");
 
-        String farmsString = FarmsHelper.FarmHelper.farmsString;
 
-        List<FarmModel> farms = FarmsHelper.FarmHelper.farms;
+
+//        farms = FarmsHelper.FarmHelper.farms;
 
         View v2 = findViewById(R.id.activity_options_page_id);
         final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
 
-        SearchableSpinner searchableSpinner = (SearchableSpinner)findViewById(R.id.dropdown);
-        ArrayList<String> mStrings = new ArrayList<String>();
+        spinner_farms = (SearchableSpinner)findViewById(R.id.dropdown);
 
-        for (FarmModel farm : farms)
-        {
-            mStrings.add(farm.shortName.replace(".", " - "));
+        get_farmsHttpResponse();
+
+        ArrayAdapter arrayAdapter = new ArrayAdapter(OptionsPage.this,android.R.layout.simple_list_item_1,fr_list);
+
+        spinner_farms.setAdapter(arrayAdapter);
+        if (!spinner_farms.isSelected()){
+            spinner_farms.setSelection(0);
         }
-
-        ArrayAdapter arrayAdapter = new ArrayAdapter(OptionsPage.this,android.R.layout.simple_spinner_dropdown_item,mStrings);
-        searchableSpinner.setAdapter(arrayAdapter);
-        searchableSpinner.setTitle("Select Farm");
-        searchableSpinner.setPositiveButton("OK");
-        String farmName = pref.getString("farmName", "");
-        searchableSpinner.setSelection(getIndex(searchableSpinner, farmName));
-
-/*        farmid = (EditText)v2.findViewById(R.id.farmIdInput);
-        String name = pref.getString("farmid", "");
-        farmidText = name;*/
-
+        else{
+            spinner_profiles.setSelection(getIndex(spinner_farms,spinner_farms.getSelectedItem().toString()));
+        }
+        spinner_farms.setTitle("Select Farm");
+        spinner_farms.setPositiveButton("OK");
+//        String farmName = pref.getString("farmName", "Select Farm");
+//        spinner_farms.setSelection(getIndex(spinner_farms, farmName));
 
         spinner_profiles = (SearchableSpinner)findViewById(R.id.dropdown_profiles);
+
         getHttpResponse();
 
         ArrayAdapter adapter = new ArrayAdapter(OptionsPage.this, android.R.layout.simple_list_item_1 , pr_list);
 
         spinner_profiles.setAdapter(adapter);
+        spinner_profiles.setTitle("Select Profile");
+        spinner_profiles.setPositiveButton("OK");
 
         if (!spinner_profiles.isSelected()){
             spinner_profiles.setSelection(0);
@@ -95,15 +100,14 @@ public class OptionsPage extends AppCompatActivity implements CompoundButton.OnC
         else{
             spinner_profiles.setSelection(getIndex(spinner_profiles,spinner_profiles.getSelectedItem().toString()));
         }
-        spinner_profiles.setTitle("Select Profile");
-        spinner_profiles.setPositiveButton("OK");
-        String profileNamee = pref.getString("profileName","");
-        spinner_profiles.setSelection(getIndex(spinner_profiles, profileNamee));
+
+//        String profileNamee = pref.getString("profilename","0");
+//        spinner_profiles.setSelection(getIndex(spinner_profiles, profileNamee));
 
         spinner_profiles.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(getApplicationContext(),"Selectedf",Toast.LENGTH_LONG);
+                Toast.makeText(getApplicationContext(),"Selected",Toast.LENGTH_LONG);
             }
 
             @Override
@@ -111,11 +115,6 @@ public class OptionsPage extends AppCompatActivity implements CompoundButton.OnC
 
             }
         });
-
-//        usersList = new ArrayList<String>();
-//        catAdapter = new ArrayAdapter<String>(this,simple_list_item_1,usersList);
-//        spinner.setAdapter(catAdapter);
-
 
         Switch activateSwitch = (Switch)v2.findViewById(R.id.activateSwitch);
         Boolean value2 = pref.getBoolean("isActivate", true);
@@ -134,19 +133,6 @@ public class OptionsPage extends AppCompatActivity implements CompoundButton.OnC
 
     }
 
-    public void getSelectedProfile(View v){
-        ProfileModel pm = (ProfileModel) spinner_profiles.getSelectedItem();
-        displayUserData(pm);
-    }
-
-    private void displayUserData(ProfileModel profile){
-        String profilename = profile.getProfilename();
-        String profileid = profile.getProfileid();
-        List<ProfileModel.Config> pconflist = profile.getProfileconfig();
-
-        String data = profilename+"  "+profileid;
-        Toast.makeText(getApplicationContext(),data,Toast.LENGTH_LONG);
-    }
 
     public List getHttpResponse() {
 
@@ -195,11 +181,63 @@ public class OptionsPage extends AppCompatActivity implements CompoundButton.OnC
                                 Profileconf.setAgg_alg(confobject.optString("agg_alg","0"));
                                 Profileconf.setMinimum_activeblinks(confobject.optString("minimum_activeblinks","0"));
                                 Profileconf.setMinimumlevel_activeblinks(confobject.optString("minimumlevel_activeblinks","0"));
+//                                Profileconf.setMinimum_trigger_count(confobject.optString("minimum_trigger_count","0"));
+//                                Profileconf.setThreshold(confobject.optString("threshold","0"));
                                 profconf.add(Profileconf);
 
                                 profileModel.setProfileconfig(profconf);
 
                                 pr_list.add(profileModel);
+                            }
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(getApplicationContext(),"Error on fetching",Toast.LENGTH_LONG);
+                        }
+                    }
+                });
+            }
+        });
+        return pr_list;
+    }
+
+    public List get_farmsHttpResponse() {
+
+        String url = "https://iam.dev.farmregistry.delaval.cloud/customers/9999999999/farms";
+
+        OkHttpClient client = new OkHttpClient();
+
+        final Request request = new Request.Builder()
+                .url(url)
+                .header("Accept", "application/json")
+                .header("Content-Type", "application/json")
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                Toast.makeText(getApplicationContext(),"problem calling api",Toast.LENGTH_LONG);
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                final String profilesresp = response.body().string();
+                OptionsPage.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("Response", profilesresp);
+                        try {
+                            JSONArray farmsArr = new JSONArray(profilesresp);
+
+                            for(int i =0; i < farmsArr.length(); i++){
+                                JSONObject farm = farmsArr.getJSONObject(i);
+
+                                FarmManagement farmModel = new FarmManagement();
+                                farmModel.setFarmid(farm.getString("farm_id"));
+                                farmModel.setFarmname(farm.getString("name"));
+
+                                fr_list.add(farmModel);
                             }
 
 
@@ -238,23 +276,23 @@ public class OptionsPage extends AppCompatActivity implements CompoundButton.OnC
     public void finishAfterSaveButton(View view)
     {
         View optionsView = findViewById(R.id.activity_options_page_id);
-        /*EditText farmid = (EditText)optionsView.findViewById(R.id.farmIdInput);*/
         final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor editor = pref.edit();
 
-
-        SearchableSpinner spinner = (SearchableSpinner)optionsView.findViewById(R.id.dropdown);
-        String selectedItem = spinner.getSelectedItem().toString();
+        String selectedItem = spinner_farms.getSelectedItem().toString();
         String selectedItem_profiles = spinner_profiles.getSelectedItem().toString();
+
         String profileid = get_profile_id(selectedItem_profiles);
+        String farmid = get_farm_id(selectedItem);
+
         String prf_config = get_profile_congif(selectedItem_profiles);
-        editor.putString("farmName", selectedItem);
+        editor.putString("farmid",farmid);
         editor.putString("profilename", selectedItem_profiles);
         editor.putString("profileid",profileid);
         editor.putString("configjson",prf_config);
         editor.commit();
 
-        Toast.makeText(this, "Settings have been saved!"+prf_config, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Settings have been saved!"+prf_config+farmid, Toast.LENGTH_SHORT).show();
         Intent scan_tagpage = new Intent(OptionsPage.this,ScanningPage.class);
         finish();
         startActivity(scan_tagpage);
@@ -286,6 +324,16 @@ public class OptionsPage extends AppCompatActivity implements CompoundButton.OnC
             }
         }
         return profileid;
+    }
+
+    public String get_farm_id(String name){
+        String farmid= "none";
+        for (int i = 0; i<fr_list.size(); i++){
+            if (fr_list.get(i).getFarmname() == name){
+                farmid = fr_list.get(i).getFarmid();
+            }
+        }
+        return farmid;
     }
 
     public String get_profile_congif(String profilename){
