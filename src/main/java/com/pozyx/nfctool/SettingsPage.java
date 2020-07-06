@@ -30,6 +30,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.PermissionChecker;
 
 import android.provider.Settings;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -43,8 +44,12 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.pozyx.nfctool.Util.DeleteTask;
 import com.pozyx.nfctool.Util.FarmsHelper;
+import com.pozyx.nfctool.Util.FirmwareVersionSetting;
+import com.pozyx.nfctool.Util.HardwareVersionSetting;
+import com.pozyx.nfctool.Util.LabelTagSetting;
 import com.pozyx.nfctool.Util.NfcWrapper;
 import com.pozyx.nfctool.Util.PostTask;
+//import com.pozyx.nfctool.Util.SettingType;
 import com.pozyx.nfctool.Util.TagSetting;
 import com.pozyx.nfctool.Util.TagSettings;
 
@@ -66,14 +71,18 @@ public class SettingsPage extends AppCompatActivity {
     private TextView UIDChange, enabledChange,idChange,percentChange, sleepChange, variationChange, settingsChange,accChange,channelChange,preambleChange,datarateChange,prfChange;
     private ProgressBar progressChange;
     private Button activateButton;
+
     private Integer mem_samples_interval;
-    private Integer mem_threshold;
+    private Long mem_threshold;
     private Integer mem_minimum_trigger_count;
+    private Integer mem_activated;
     private Integer mem_agg_alg;
     private Integer mem_min_active_blinks;
     private Integer mem_minlevel_active_blinks;
+
     private HashMap<String, TextView> settings_views;
     TagSettings settings;
+    byte[] settingsBytes;
     NfcWrapper nfc = new NfcWrapper();
 
     Toast current_toast;
@@ -90,22 +99,23 @@ public class SettingsPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings_page);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
-            //make nfcV object and read some data
-            Tag tag = getIntent().getParcelableExtra(NfcAdapter.EXTRA_TAG);
+        //make nfcV object and read some data
+        final Tag tag = getIntent().getParcelableExtra(NfcAdapter.EXTRA_TAG);
 
+        nfcvTag = NfcV.get(tag);
 
-            nfcvTag = NfcV.get(tag);
+        mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
-            mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        mPendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 
-            mPendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+        getWindow().setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-            getWindow().setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        //get data passed from NFCRequirementsPage
+            settingsBytes = (byte[])getIntent().getSerializableExtra("TagSettingsBytes");
+//            settingsBytes = Base64.decode(prefs.getString("TagSettingsBytes",""),Base64.DEFAULT);
 
-            //get data passed from NFCRequirementsPage
-
-            byte[] settingsBytes = (byte[])getIntent().getSerializableExtra("TagSettingsBytes");
             if (settingsBytes == null){
                 settingsBytes = nfc.readSettingsBlocks(nfcvTag);
             }
@@ -114,6 +124,8 @@ public class SettingsPage extends AppCompatActivity {
             if (settingsBytes.length != 0) {
                 settings.deserialize(settingsBytes);
             }
+
+//            findViewById(R.id.update_button).performClick();
 
             final TableLayout settings_table = findViewById(R.id.SettingsTable);
             settings_table.setPadding(15,15,15,15);
@@ -148,7 +160,7 @@ public class SettingsPage extends AppCompatActivity {
 
 
             }
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
                 final String prfconf_json = prefs.getString("configjson","");
 
                 JSONObject jObj = null;
@@ -166,12 +178,41 @@ public class SettingsPage extends AppCompatActivity {
                 mem_agg_alg = Integer.parseInt(configobj.optString("agg_alg"));
                 mem_min_active_blinks = Integer.parseInt(configobj.optString("minimum_activeblinks"));
                 mem_minlevel_active_blinks = Integer.parseInt(configobj.optString("minimumlevel_activeblinks"));
-//                mem_threshold = Integer.parseInt(configobj.optString("threshold"));
-//                mem_minimum_trigger_count = Integer.parseInt(configobj.optString("minimum_trigger_count"));
+                mem_activated = (int)settings.get_setting("State");
+                mem_threshold = Long.parseLong(configobj.optString("threshold"));
+                mem_minimum_trigger_count = Integer.parseInt(configobj.optString("minimum_trigger_count","3"));
+
                 activateButton = findViewById(R.id.deactivateButton2);
+
+                try {
+                    settings.set_setting("State",1);
+                    settings.set_setting("Samples per interval",mem_samples_interval);
+                    settings.set_setting("Aggregation algorithm",mem_agg_alg);
+                    settings.set_setting("Minimum active blinks",mem_min_active_blinks);
+                    settings.set_setting("Minimum level active blinks",mem_minlevel_active_blinks);
+                    settings.set_setting("Threshold",mem_threshold);
+//                    settings.set_setting("Minimum Trigger Count",mem_minimum_trigger_count);
+                    settings.set_setting("Minimum Trigger Count",mem_minimum_trigger_count.longValue());
+                    //                        tag_memory.setText(settings.get_setting("Tg"));
+                    HashMap<Integer, byte[]> changedBlocks = settings.getChangedBlocks();
+                    nfcvTag.connect();
+                    nfc.writeBlocks(nfcvTag, changedBlocks);
+                    nfc.sendInterrupt(nfcvTag);
+                    nfcvTag.close();
+                    showToast("Written successfully"+mem_threshold+mem_minimum_trigger_count);
+
+                }
+                catch (Exception e){
+
+                }
 
             if (settings.get_setting("State") == 0){   //activateButton default state is Deactivate
                 DEACTIVATE = false;
+                try {
+                    settings.set_setting("State",(byte)1);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
                 activateButton.setText("ACTIVATE");
                 activateButton.setBackgroundColor(Color.GREEN);
             }
@@ -234,14 +275,18 @@ public class SettingsPage extends AppCompatActivity {
                         return;
                     }
                     try {
+                        settings.set_setting("State",(byte)1);
                         settings.set_setting("Samples per interval",mem_samples_interval);
                         settings.set_setting("Aggregation algorithm",mem_agg_alg);
                         settings.set_setting("Minimum active blinks",mem_min_active_blinks);
                         settings.set_setting("Minimum level active blinks",mem_minlevel_active_blinks);
                         settings.set_setting("Threshold",mem_threshold.shortValue());
 //                        settings.set_setting("Minimum Trigger Count",mem_minimum_trigger_count);
+                        settings.set_setting("Minimum trigger count",mem_minimum_trigger_count.shortValue());
 
-//                        tag_memory.setText(settings.get_setting("Tg"));
+                        TextView tvdebug = (TextView)findViewById(R.id.textViewdebug);
+                        tvdebug.setText(settings.settingsmap.get("Threshold").getValue()+";"+settings.get_setting("Minimum trigger count")+"; "+mem_minimum_trigger_count+";");
+
                         HashMap<Integer, byte[]> changedBlocks = settings.getChangedBlocks();
                         nfcvTag.connect();
                         nfc.writeBlocks(nfcvTag, changedBlocks);
@@ -249,7 +294,7 @@ public class SettingsPage extends AppCompatActivity {
                         nfcvTag.close();
                         showToast("Written successfully"+prfconf_json);
                     } catch (IOException | NullPointerException e) {
-                        showToast("Keep tag close to mobile!"+e.toString());
+                        showToast("Keep tag close to mobile!");
                     } catch (Exception e) {
                         showToast(e.getMessage());
                     }
@@ -272,77 +317,80 @@ public class SettingsPage extends AppCompatActivity {
                 }
             });
 
-            findViewById(R.id.read_button).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (nfcvTag.isConnected()){ //check if tag is already busy
-                        showToast("Commands following too fast");
-                        try{nfcvTag.close();} catch(Exception e) {};
-                        return;
-                    }
-                    try {
-                        byte[] settingsBytes = nfc.readSettingsBlocks(nfcvTag);
-                        settings.deserialize(settingsBytes);
-                        updateView();
-                        showToast("Read successfully!");
-                    } catch (Exception e){
-                        showToast("Keep tag close to mobile!");
-                    }
+//            findViewById(R.id.read_button).setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    if (nfcvTag.isConnected()){ //check if tag is already busy
+//                        showToast("Commands following too fast");
+//                        try{nfcvTag.close();} catch(Exception e) {};
+//                        return;
+//                    }
+//                    try {
+//                        byte[] settingsBytes = nfc.readSettingsBlocks(nfcvTag);
+//                        settings.deserialize(settingsBytes);
+//                        updateView();
+//                        showToast("Read successfully!");
+//                    } catch (Exception e){
+//                        showToast("Keep tag close to mobile!");
+//                    }
+//
+////                    Toast.makeText(getApplicationContext(),)
+//
+//                }
+//            });
 
-//                    Toast.makeText(getApplicationContext(),)
 
-                }
-            });
 
-            findViewById(R.id.update_button).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (nfcvTag.isConnected()) { //check if tag is already busy
-                        showToast("Commands following too fast");
-                        try {
-                            nfcvTag.close();
-                        } catch (Exception e) {
-                        }
-                        ;
-                        return;
-                    }
-                    try {
-                        settings.set_setting("Samples per interval",mem_samples_interval);
-                        settings.set_setting("Aggregation algorithm",mem_agg_alg);
-                        settings.set_setting("Minimum active blinks",mem_min_active_blinks);
-                        settings.set_setting("Minimum level active blinks",mem_minlevel_active_blinks);
+//            findViewById(R.id.update_button).setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    if (nfcvTag.isConnected()) { //check if tag is already busy
+//                        showToast("Commands following too fast");
+//                        try {
+//                            nfcvTag.close();
+//                        } catch (Exception e) {
+//                        }
+//                        ;
+//                        return;
+//                    }
+//                    try {
+//                        settings.set_setting("State",(byte)1);
+//                        settings.set_setting("Samples per interval",mem_samples_interval);
+//                        settings.set_setting("Aggregation algorithm",mem_agg_alg);
+//                        settings.set_setting("Minimum active blinks",mem_min_active_blinks);
+//                        settings.set_setting("Minimum level active blinks",mem_minlevel_active_blinks);
 //                        settings.set_setting("Threshold",mem_threshold.shortValue());
+////                        settings.set_setting("Minimum Trigger Count",mem_minimum_trigger_count);
 //                        settings.set_setting("Minimum Trigger Count",mem_minimum_trigger_count);
-
-//                        tag_memory.setText(settings.get_setting("Tg"));
-                        HashMap<Integer, byte[]> changedBlocks = settings.getChangedBlocks();
-                        nfcvTag.connect();
-                        nfc.writeBlocks(nfcvTag, changedBlocks);
-                        nfc.sendInterrupt(nfcvTag);
-                        nfcvTag.close();
-                        showToast("Written successfully"+prfconf_json);
-                    } catch (IOException | NullPointerException e) {
-                        showToast("Keep tag close to mobile!"+e.toString());
-                    } catch (Exception e) {
-                        showToast(e.getMessage());
-                    }
-
-                    final Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                //finally read the settings and update the view
-                                byte[] settingsBytes = nfc.readSettingsBlocks(nfcvTag);
-                                settings.deserialize(settingsBytes);
-                                updateView();
-                            } catch (Exception e) {
-
-                            }
-                        }
-                    }, 100);
-                }
-            });
+////                        tag_memory.setText(settings.get_setting("Tg"));
+//                        HashMap<Integer, byte[]> changedBlocks = settings.getChangedBlocks();
+//                        nfcvTag.connect();
+//                        nfc.writeBlocks(nfcvTag, changedBlocks);
+//                        nfc.sendInterrupt(nfcvTag);
+//                        nfcvTag.close();
+//                        showToast("Written successfully"+mem_minimum_trigger_count);
+//                    } catch (IOException | NullPointerException e) {
+//                        showToast("Keep tag close to mobile!");
+//                    } catch (Exception e) {
+//                        showToast(e.getMessage());
+//                    }
+//
+//                    final Handler handler = new Handler();
+//                    handler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            try {
+//                                //finally read the settings and update the view
+//                                byte[] settingsBytes = nfc.readSettingsBlocks(nfcvTag);
+//                                settings.deserialize(settingsBytes);
+//                                updateView();
+//                            } catch (Exception e) {
+//
+//                            }
+//                        }
+//                    }, 100);
+//                }
+//            });
 
             findViewById(R.id.nextButton).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -352,18 +400,26 @@ public class SettingsPage extends AppCompatActivity {
                         Long idValue = settings.settingsmap.get("Id").getValue();
 
                         SharedPreferences.Editor editor = pref.edit();
+                        editor.putString("TagSettingsBytes_pref", Base64.encodeToString(settingsBytes,Base64.DEFAULT));
                         editor.putString("Id",String.valueOf(idValue));
                         editor.putString("mem_samples_interval", String.valueOf(mem_samples_interval));
                         editor.putString("mem_agg_alg", String.valueOf(mem_agg_alg));
                         editor.putString("mem_min_active_blinks", String.valueOf(mem_min_active_blinks));
                         editor.putString("mem_minlevel_active_blinks", String.valueOf(mem_minlevel_active_blinks));
-//                        editor.putString("mem_minimum_trigger_count", String.valueOf(mem_minimum_trigger_count));
-//                        editor.putString("mem_threshold", String.valueOf(mem_threshold));
+                        editor.putString("mem_activated", String.valueOf(mem_activated));
+
+                        editor.putString("mem_minimum_trigger_count", String.valueOf(mem_minimum_trigger_count));
+
+                        editor.putString("mem_threshold", String.valueOf(mem_threshold));
+
 
                         editor.commit();
-                        Intent intent = new Intent(SettingsPage.this, MenuPage.class);
-                        intent.putExtra("Id", String.valueOf(idValue));
-                        startActivity(intent);
+                        Intent settings_intent = new Intent(SettingsPage.this, MenuPage.class);
+                        settings_intent.putExtra("TagSettingsBytes_int", settingsBytes);
+                        settings_intent.putExtra(NfcAdapter.EXTRA_TAG, tag);
+
+                        startActivity(settings_intent);
+                        finish();
                     } catch (Exception e){
                         showToast("Unexpected error occurred!");
                     }
@@ -407,17 +463,21 @@ public class SettingsPage extends AppCompatActivity {
 
     }
 
-
+    public String generateHardwareId
 
     @Override
     public void onNewIntent(Intent intent){ //when a tag is introduced on page 3, this triggers
         super.onNewIntent(intent);
+
         Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
         if (java.util.Arrays.equals(nfcvTag.getTag().getId(), tag.getId())) {
             nfcvTag = NfcV.get(tag);
             try{
                 byte[] statusblock = nfc.readStatusBlocks(nfcvTag);
                 settings.deserializeStatus(statusblock);
+
+//                findViewById(R.id.update_button).performClick();
+
                 updateView();
                 return;
             }
@@ -439,6 +499,8 @@ public class SettingsPage extends AppCompatActivity {
             byte[] settingsBytes = nfc.readSettingsBlocks(nfcvTag);
             settings.deserialize(settingsBytes);
             updateView();
+            showToast("Updated."+settings.get_settings().get(26).getValue());
+
         } catch (Exception e) {
             showToast("Read failed.");
         }
@@ -479,6 +541,7 @@ public class SettingsPage extends AppCompatActivity {
             activateButton.setText("DEACTIVATE");
             activateButton.setBackgroundColor(Color.RED);
         }else{
+
             DEACTIVATE = false;
             activateButton.setText("ACTIVATE");
             activateButton.setBackgroundColor(Color.GREEN);

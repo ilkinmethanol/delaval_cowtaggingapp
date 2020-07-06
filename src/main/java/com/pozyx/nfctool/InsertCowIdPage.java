@@ -27,8 +27,10 @@ import android.os.Handler;
 import android.os.PersistableBundle;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
+import android.provider.CalendarContract;
 import android.provider.Settings;
 import android.renderscript.ScriptIntrinsicYuvToRGB;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -60,7 +62,13 @@ import com.pozyx.nfctool.Util.ProfileConfig;
 import com.pozyx.nfctool.Util.TagSetting;
 import com.pozyx.nfctool.Util.TagSettings;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.w3c.dom.Text;
+
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
@@ -84,6 +92,7 @@ public class InsertCowIdPage extends AppCompatActivity  {
     private String samplesInterval;
     private String aggAlg;
     private String minimumActiveblinks;
+    private String mem_activated;
     private String minimumlevelActiveblinks;
     private String cowidValue;
     private String threshold;
@@ -91,6 +100,15 @@ public class InsertCowIdPage extends AppCompatActivity  {
     private String hardwareid;
     private String animalid;
     private String farmid;
+
+    private  String memeta;
+    private  String mempgdly;
+    private  String mempower;
+    private  String memblinkindex;
+    private  String memchanged;
+    private  String memfirmware;
+    private  String memhardware;
+
     private Double latValue = 0.0;
     private Double lngValue = 0.0;
     private Integer responseCode;
@@ -99,6 +117,9 @@ public class InsertCowIdPage extends AppCompatActivity  {
     private LocationManager locationManager;
     private ProfileConfig pc;
     public AnimalAssociate animalAssociate;
+    byte[] settingsBytes;
+    Button submit;
+    TextView tw;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,7 +128,8 @@ public class InsertCowIdPage extends AppCompatActivity  {
 
         findViewById(R.id.loadingText).setVisibility(View.INVISIBLE);
         findViewById(R.id.loadingCircle).setVisibility(View.INVISIBLE);
-
+        findViewById(R.id.thumbsup).setVisibility(View.INVISIBLE);
+        submit = (Button)findViewById(R.id.submitButton_cowid);
         cowid = findViewById(R.id.cowIdInput);
         cowid.setRawInputType(Configuration.KEYBOARD_QWERTY);
 
@@ -120,6 +142,10 @@ public class InsertCowIdPage extends AppCompatActivity  {
         //tagidValue = intent.getExtras().getString("Id");
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        settingsBytes = Base64.decode(prefs.getString("TagSettingsBytes_pref","0"), Base64.DEFAULT);
+
+        Tag tag = getIntent().getParcelableExtra(NfcAdapter.EXTRA_TAG);
+//        settingsBytes = (byte[])getIntent().getSerializableExtra("TagSettingsBytes");
 
 //         cowid.setText(currentTextScan);
         findViewById(R.id.cowIdInput).requestFocus();
@@ -204,9 +230,15 @@ public class InsertCowIdPage extends AppCompatActivity  {
     public void cancelButtonCowId(View view)
     {
         try {
+//            Tag tag = getIntent().getParcelableExtra(NfcAdapter.EXTRA_TAG);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString("TagSettingsBytes_pref", Base64.encodeToString(settingsBytes,Base64.DEFAULT));
+            editor.commit();
             Intent intent = new Intent(getApplicationContext(), ScanningPage.class);
+//            intent.putExtra("TagSettingsBytes", settingsBytes);
+//            intent.putExtra(NfcAdapter.EXTRA_TAG, tag);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            finish();
             startActivity(intent);
         } catch (Exception e) {
             Toast.makeText(InsertCowIdPage.this, "Unexpected error occurred!", Toast.LENGTH_SHORT).show();
@@ -215,20 +247,60 @@ public class InsertCowIdPage extends AppCompatActivity  {
 
     public void saveButtonCowId(View view)
     {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        hideKeyboard(InsertCowIdPage.this);
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+//        settingsBytes = Base64.decode(prefs.getString("TagSettingsBytes","0"), Base64.DEFAULT);
+
+        final String prfconf_json = prefs.getString("configjson","");
+
+        JSONObject jObj = null;
+        JSONObject configobj = null;
+        try {
+            jObj = new JSONObject(prfconf_json);
+            JSONArray jsonArry = jObj.getJSONArray("profileconfig");
+
+            configobj = jsonArry.getJSONObject(0);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+//        mem_samples_interval = Integer.parseInt(configobj.optString("samples_interval"));
+//        mem_agg_alg = Integer.parseInt(configobj.optString("agg_alg"));
+//        mem_min_active_blinks = Integer.parseInt(configobj.optString("minimum_activeblinks"));
+//        mem_minlevel_active_blinks = Integer.parseInt(configobj.optString("minimumlevel_activeblinks"));
 
         tagidValue = prefs.getString("Id","Nulldata");
-        samplesInterval  = prefs.getString("mem_samples_interval","0");
-        aggAlg = prefs.getString("mem_agg_alg","0");
-        minimumActiveblinks = prefs.getString("mem_min_active_blinks","0");
-        minimumlevelActiveblinks = prefs.getString("mem_minlevel_active_blinks","0");
+
+        SharedPreferences.Editor edit = prefs.edit();
+        edit.putString("TagSettingsBytes_pref", Base64.encodeToString(settingsBytes,Base64.DEFAULT));
+        edit.commit();
+
+        samplesInterval  = configobj.optString("samples_interval");
+        aggAlg = configobj.optString("agg_alg");
+        minimumActiveblinks = configobj.optString("minimum_activeblinks");
+        minimumlevelActiveblinks = configobj.optString("minimumlevel_activeblinks");
+//        mem_activated = prefs.getString("mem_activated","1");
+//        memeta = prefs.getString("mem_eta","1");
+//        mempgdly = prefs.getString("mem_pgdly","1");
+//        mempower = prefs.getString("mem_power","1");
+//        memblinkindex = prefs.getString("mem_blinkindex","1");
+//        memchanged = prefs.getString("mem_changed","1");
+//        memfirmware = prefs.getString("mem_firmware","1");
+//        memhardware = prefs.getString("mem_hardware","1");
         threshold = prefs.getString("mem_threshold","0");
         minimum_trigger_count = prefs.getString("mem_minimum_trigger_count","0");
+
         hardwareid = tagidValue;
         animalid = cowid.getText().toString();
         farmid = prefs.getString("farmid","0");
 //        minimum_trigger_count,threshold
-        ProfileConfig pc = new ProfileConfig(samplesInterval,aggAlg, minimumActiveblinks,minimumlevelActiveblinks);
+        ProfileConfig pc = new ProfileConfig(samplesInterval,
+                                            aggAlg,
+                                            minimumActiveblinks,
+                                            minimumlevelActiveblinks,
+                                            threshold,
+                                            minimum_trigger_count);
         animalAssociate = new AnimalAssociate(hardwareid, animalid, farmid, pc);
 
         Gson gs = new Gson();
@@ -239,38 +311,95 @@ public class InsertCowIdPage extends AppCompatActivity  {
             Toast.makeText(this, "Given CowID is incorrect!", Toast.LENGTH_LONG).show();
             return;
         }
-        Toast.makeText(getApplicationContext(),"Animal associated successfully",Toast.LENGTH_LONG).show();
-//
-//        Toast.makeText(this, "Given CowID is correct!"+gs.toJson(animalAssociate), Toast.LENGTH_LONG).show();
-//        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://4fm1sus9w2.execute-api.eu-west-1.amazonaws.com/dev/").addConverterFactory(GsonConverterFactory.create()).build();
-//        RetroConfig retroConfig = retrofit.create(RetroConfig.class);
-//
+//        Toast.makeText(getApplicationContext(),"Animal associated successfully"+ Arrays.toString(settingsBytes),Toast.LENGTH_LONG).show();
+        tw = (TextView)findViewById(R.id.loadingText);
+        findViewById(R.id.loadingText).setVisibility(View.VISIBLE);
+        findViewById(R.id.loadingCircle).setVisibility(View.VISIBLE);
+
         OkHttpClient client = new OkHttpClient();
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         // put your json here
         RequestBody body = RequestBody.create(JSON, jsonObject);
         Request request = new Request.Builder()
-                .url("https://4fm1sus9w2.execute-api.eu-west-1.amazonaws.com/dev/pozyxtag")
+                .url("https://zbn8x5og64.execute-api.eu-west-1.amazonaws.com/stage/pozyxtag")
                 .post(body)
                 .build();
+        boolean isConnected = isNetworkConnected();
 
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                return;
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    Toast.makeText(InsertCowIdPage.this, "Added successfully!"+response.body().string(), Toast.LENGTH_SHORT).show();
+        if (isConnected) {
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    return;
                 }
-            }
-        });
+
+                @Override
+                public void onResponse(Call call, final Response response) throws IOException {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(response.isSuccessful()){
+//                                submit.setEnabled(false);
+                                if (response.code() == 200 || response.code() == 201 || response.code() == 204) {
+                                    tw.setText("Cow associated successfully !");
+                                    findViewById(R.id.loadingCircle).setVisibility(View.INVISIBLE);
+                                    findViewById(R.id.thumbsup).setVisibility(View.VISIBLE);
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+
+                                            Intent menupage = new Intent(InsertCowIdPage.this,ScanningPage.class);
+                                            startActivity(menupage);
+                                            finish();
+
+                                        }
+                                    },3000);
+
+                                }
+                                else{
+                                    findViewById(R.id.loadingText).setVisibility(View.VISIBLE);
+                                    tw.setText("Cow not associated !"+response.code());
+                                    Handler h = new Handler();
+                                    h.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            finish();
+                                        }
+                                    },3000);
+
+                                }
+                            }
+                            else {
+                                tw.setText("Something went wrong, please try again");
+                                findViewById(R.id.loadingCircle).setVisibility(View.INVISIBLE);
+//                                Handler h = new Handler();
+//                                h.postDelayed(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        finish();
+//                                    }
+//                                },3000);
+
+                            }
+                        }
+                    });
+//                boolean isConnected = isNetworkConnected();
 
 
-
-//        try {
+                }
+            });
+        }
+        else {
+            tw.setText("Pease check your internet connection");
+            Handler h = new Handler();
+            h.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    finish();
+                }
+            },3000);
+        }
+        //        try {
 //            hideKeyboard(InsertCowIdPage.this);
 //            isConnected = isNetworkConnected();
 //            if (isConnected) {

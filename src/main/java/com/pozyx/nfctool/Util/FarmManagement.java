@@ -5,8 +5,8 @@ public class FarmManagement {
     private String farmid;
 
     public FarmManagement(String farmname, String farmid) {
-        this.farmname = farmname;
-        this.farmid = farmid;
+    this.farmname = farmname;
+    this.farmid = farmid;
     }
 
     public String getFarmname() {

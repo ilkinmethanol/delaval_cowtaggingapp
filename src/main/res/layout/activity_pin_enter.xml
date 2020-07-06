@@ -14,9 +14,10 @@
         android:layout_height="101dp"
         android:layout_marginStart="0dp"
         android:layout_marginLeft="0dp"
-        android:layout_marginTop="-95dp"
+        android:layout_marginTop="-5dp"
         android:layout_marginEnd="0dp"
         android:layout_marginRight="0dp"
+        android:layout_marginBottom="35dp"
         android:gravity="center_horizontal"
         app:srcCompat="@drawable/ic_delaval" />
 
@@ -41,7 +42,7 @@
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:hint=""
-        android:inputType="text"
+        android:inputType="number"
         android:fontFamily="@font/helveticabold"
         android:textColor="#000000"
         android:textColorHint="#414241"

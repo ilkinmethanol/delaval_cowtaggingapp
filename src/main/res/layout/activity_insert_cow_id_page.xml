@@ -86,25 +86,33 @@
         android:text="Cancel"
         android:textColor="@color/colorPrimaryDelaval" />
 
-    <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:id="@+id/loadingCircle"
+    <ImageView
+        android:id="@+id/thumbsup"
+        android:layout_width="81dp"
+        android:layout_height="42dp"
         android:layout_marginTop="20dp"
-        android:clickable="false"/>
+        android:layout_marginBottom="10dp"
+        app:srcCompat="@drawable/pinpng_com_thumbs_up_icon_png_58274" />
 
     <TextView
         android:id="@+id/loadingText"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
-        android:layout_height="wrap_content"
+        android:clickable="false"
         android:fontFamily="@font/helveticabold"
-        android:text="Your location is being determined. It may take up to couple minutes. Please wait."
+        android:text="Please wait. Cow is associating with tag."
         android:textAlignment="center"
         android:textColor="@color/colorPrimaryDelaval"
-        android:textSize="16dp"
-        android:clickable="false"/>
+        android:textSize="16dp" />
+
+    <ProgressBar
+        android:id="@+id/loadingCircle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:clickable="false"
+        android:indeterminate="true" />
 
 </LinearLayout>

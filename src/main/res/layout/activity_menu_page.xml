@@ -31,7 +31,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginStart="45dp"
         android:layout_marginLeft="45dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="5dp"
         android:layout_marginEnd="45dp"
         android:layout_marginRight="45dp"
         android:background="@drawable/button_save"
@@ -79,6 +79,20 @@
 
         android:text="Unassociate Cow"
         android:textColor="#FFFFFF" />
+
+    <TextView
+        android:id="@+id/unassociate_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="10dp"
+        android:clickable="false"
+        android:fontFamily="@font/helveticabold"
+        android:text="Please wait. \n Cow is unassociating from tag."
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimaryDelaval"
+        android:textSize="16dp" />
 
 
 </LinearLayout>

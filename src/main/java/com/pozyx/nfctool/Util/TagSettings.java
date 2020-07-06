@@ -45,6 +45,7 @@ public class TagSettings {
             new LabelTagSetting(35, SettingType.BOOLEAN, "Aggregation algorithm", true),
             new LabelTagSetting(36, SettingType.UINT8, "Minimum active blinks", true),
             new LabelTagSetting(37, SettingType.UINT8, "Minimum level active blinks", true),
+            
     };
 
     public HashMap<String, TagSetting> settingsmap = new HashMap<String, TagSetting>() {{

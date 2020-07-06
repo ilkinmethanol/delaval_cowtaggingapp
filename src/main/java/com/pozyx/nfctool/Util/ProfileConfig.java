@@ -21,6 +21,46 @@ public class ProfileConfig {
     @Expose
     private String minimumlevelActiveblinks;
 
+    @SerializedName("activated")
+    @Expose
+    private String memactivated;
+
+    @SerializedName("eta")
+    @Expose
+    private String memeta;
+
+    @SerializedName("pgdly")
+    @Expose
+    private String mempgdly;
+
+    @SerializedName("power")
+    @Expose
+    private String mempower;
+
+    @SerializedName("blinkindex")
+    @Expose
+    private String memblinkindex;
+
+    @SerializedName("changed")
+    @Expose
+    private String memchanged;
+
+    @SerializedName("firmware")
+    @Expose
+    private String memfirmware;
+
+    @SerializedName("hardware")
+    @Expose
+    private String memhardware;
+
+    @SerializedName("minimum_trigger_count")
+    @Expose
+    private String memminimumtriggercount;
+
+    @SerializedName("threshold")
+    @Expose
+    private String memthreshold;
+
 //
 //    @SerializedName("minimumlevel_activeblinks")
 //    @Expose
@@ -75,15 +115,16 @@ public class ProfileConfig {
         this.minimumActiveblinks = minimumActiveblinks;
     }
 
-    public ProfileConfig(String samplesInterval, String aggAlg, String minimumActiveblinks, String minimumlevelActiveblinks) {
-//                         String minimumtriggercount, String threshold
+    public ProfileConfig(String samplesInterval, String aggAlg, String minimumActiveblinks, String minimumlevelActiveblinks,
+                         String  memthreshold, String memminimumtriggercount) {
         this.samplesInterval = samplesInterval;
         this.aggAlg = aggAlg;
         this.minimumActiveblinks = minimumActiveblinks;
         this.minimumlevelActiveblinks = minimumlevelActiveblinks;
-//        this.threshold = threshold;
-//        this.minimumtriggercount = minimumtriggercount;
+        this.memthreshold = memthreshold;
+        this.memminimumtriggercount = memminimumtriggercount;
     }
+
 
 
     public String getMinimumlevelActiveblinks() {

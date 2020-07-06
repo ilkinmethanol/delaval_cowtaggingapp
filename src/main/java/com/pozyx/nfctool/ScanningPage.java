@@ -24,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.preference.PreferenceManager;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -34,7 +35,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pozyx.nfctool.Util.NfcWrapper;
+import com.pozyx.nfctool.Util.TagSetting;
 import com.pozyx.nfctool.Util.TagSettings;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 
 public class ScanningPage extends AppCompatActivity {
     private NfcAdapter mNfcAdapter; //phone nfc adapter
@@ -46,11 +56,29 @@ public class ScanningPage extends AppCompatActivity {
     private static final int TIME_DELAY = 2000;
     private static long back_pressed;
     final int LOCATION_PERMISSION_REQUEST_CODE = 1516; //Note that the value 1252 is arbitrary.
+    TagSettings settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scanning_page);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        final String prfconf_json = prefs.getString("configjson","");
+
+        JSONObject jObj = null;
+        JSONObject configobj = null;
+        try {
+            jObj = new JSONObject(prfconf_json);
+            JSONArray jsonArry = jObj.getJSONArray("profileconfig");
+
+            configobj = jsonArry.getJSONObject(0);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+//                mem_threshold = Integer.parseInt(configobj.optString("threshold"));
+//                mem_minimum_trigger_count = Integer.parseInt(configobj.optString("minimum_trigger_count"));
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED
@@ -133,16 +161,23 @@ public class ScanningPage extends AppCompatActivity {
             {
                 NfcWrapper nfc = new NfcWrapper();
                 byte[] settings_bytes = nfc.readSettingsBlocks(nfcvTag);
-
+                settings = new TagSettings();
+                if (settings_bytes.length != 0) {
+                    settings.deserialize(settings_bytes);
+                }
+                Long idValue = settings.settingsmap.get("Id").getValue();
                 Intent settings_intent = new Intent(ScanningPage.this, MenuPage.class);
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                SharedPreferences.Editor editor = prefs.edit();
 
-                settings_intent.putExtra("TagSettingsBytes", settings_bytes);
+                editor.putString("TagSettingsBytes_pref", Base64.encodeToString(settings_bytes,Base64.DEFAULT));
+                editor.putString("Id",String.valueOf(idValue));
 
+                settings_intent.putExtra("TagSettingsBytes_int", settings_bytes);
                 settings_intent.putExtra(NfcAdapter.EXTRA_TAG, tag);
 
 
-//                NdefMessage ndefMessage = createNdefMessage("This is profileconfig data");
-//                writeNdefMessage(tag,ndefMessage);
+                editor.commit();
 
                 startActivity(settings_intent);
             }

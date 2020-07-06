@@ -19,7 +19,8 @@
         android:icon="@drawable/logo_delaval"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AssociateCow"></activity>
+<!--        <activity android:name=".LoadingScreen"></activity>-->
+        <activity android:name=".AssociateCow" />
         <activity android:name=".MenuPage" />
         <activity android:name=".PinEnter">
             <intent-filter>
@@ -48,7 +49,7 @@
         </activity>
         <activity
             android:name=".InsertCowIdPage"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

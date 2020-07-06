@@ -3,13 +3,17 @@ package com.pozyx.nfctool;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.NfcV;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -32,6 +36,7 @@ import com.squareup.okhttp.FormEncodingBuilder;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
@@ -58,10 +63,10 @@ public class MenuPage extends AppCompatActivity {
     private NfcAdapter mNfcAdapter;
     private PendingIntent mPendingIntent ;
     private NfcV nfcvTag;
-
+    byte[] settingsBytes;
     private HashMap<String, TextView> settings_views;
     TagSettings settings;
-
+    TextView tv;
     NfcWrapper nfc = new NfcWrapper();
 
     void showToast(String msg){
@@ -80,8 +85,15 @@ public class MenuPage extends AppCompatActivity {
         viewInfo = (Button) findViewById(R.id.view_info_btn);
         associateCowBtn = (Button) findViewById(R.id.associate_cow_btn);
         unassociateCowBtn = (Button) findViewById(R.id.unassociate_cow_btn);
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
+//        settingsBytes = (byte[])getIntent().getSerializableExtra("TagSettingsBytes_int");
+        Tag tag = getIntent().getParcelableExtra(NfcAdapter.EXTRA_TAG);
+        settingsBytes = Base64.decode(prefs.getString("TagSettingsBytes_pref","0"), Base64.DEFAULT);
+
+        tv = (TextView)findViewById(R.id.unassociate_text);
+
+        tv.setVisibility(View.INVISIBLE);
 
 //        //make nfcV object and read some data
 //        Tag tag = getIntent().getParcelableExtra(NfcAdapter.EXTRA_TAG);
@@ -107,13 +119,13 @@ public class MenuPage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Tag tag = getIntent().getParcelableExtra(NfcAdapter.EXTRA_TAG);
-                byte[] settingsBytes = (byte[])getIntent().getSerializableExtra("TagSettingsBytes");
 
+//                settingsBytes = Base64.decode(prefs.getString("TagSettingsBytes_pref","0"), Base64.DEFAULT);
                 Intent settingsPage = new Intent(MenuPage.this,SettingsPage.class);
-
                 settingsPage.putExtra("TagSettingsBytes", settingsBytes);
                 settingsPage.putExtra(NfcAdapter.EXTRA_TAG, tag);
                 startActivity(settingsPage);
+                finish();
             }
         });
 
@@ -121,9 +133,13 @@ public class MenuPage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+//                    settingsBytes = Base64.decode(prefs.getString("TagSettingsBytes","0"), Base64.DEFAULT);
+
                     Intent intent = new Intent(MenuPage.this, InsertCowIdPage.class);
+                    intent.putExtra("TagSettingsBytes_pref",settingsBytes);
                     startActivity(intent);
+                    finish();
                 } catch (Exception e){
 
                     showToast("Unexpected error occurred!");
@@ -136,10 +152,15 @@ public class MenuPage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                final boolean isConnected = isNetworkConnected();
+
+
+                final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+//                settingsBytes = Base64.decode(prefs.getString("TagSettingsBytes","0"), Base64.DEFAULT);
+
                 tagidValue = prefs.getString("Id","Nulldata");
                 farmidValue = prefs.getString("farmid","Null");
-                Toast.makeText(getApplicationContext(),"Unassociated from tag"+farmidValue,Toast.LENGTH_LONG).show();
+//                Toast.makeText(getApplicationContext(),"Unassociated from tag"+ Arrays.toString(settingsBytes),Toast.LENGTH_LONG).show();
                 AnimalAssociate animalAssociate = new AnimalAssociate(tagidValue,farmidValue);
                 Gson gs = new Gson();
                 String jsonObject = gs.toJson(animalAssociate);
@@ -148,27 +169,61 @@ public class MenuPage extends AppCompatActivity {
                 okhttp3.MediaType JSON = MediaType.parse("application/json; charset=utf-8");
                 // put your json here
                 okhttp3.RequestBody body = RequestBody.create(JSON, jsonObject);
-                okhttp3.Request request = new Request.Builder()
-                        .url("https://4fm1sus9w2.execute-api.eu-west-1.amazonaws.com/dev/pozyxtag")
+                final okhttp3.Request request = new Request.Builder()
+                        .url("https://zbn8x5og64.execute-api.eu-west-1.amazonaws.com/stage/pozyxtag")
                         .patch(body)
                         .build();
 
-                client.newCall(request).enqueue(new Callback() {
-                    @Override
-                    public void onFailure(okhttp3.Call call, IOException e) {
-                        showToast("unassociate failure ");
-                    }
+                if (isConnected){
 
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        if (!response.isSuccessful()) {
-                            showToast("Problem on call unassociate"+response.code());
+                    client.newCall(request).enqueue(new Callback() {
+                        @Override
+                        public void onFailure(okhttp3.Call call, IOException e) {
+                            showToast("unassociate failure ");
                         }
-                    }
-                });
-                return;
+
+                        @Override
+                        public void onResponse(Call call, final Response response) throws IOException {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (isConnected){
+                                        if (response.code() == 200 || response.code() == 201 || response.code() == 204){
+                                            tv.setVisibility(View.VISIBLE);
+                                            tv.setText("unassociating");
+                                            Handler h = new Handler();
+                                            h.postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    tv.setText("Unassociated");
+                                                }
+                                            },2000);
+                                        }
+                                        else {
+                                            tv.setVisibility(View.VISIBLE);
+                                            tv.setText("not unassociating");
+                                        }
+                                    }
+
+                                }
+                            });
+                        }
+                    });
+                }
+                else{
+                    tv.setVisibility(View.VISIBLE);
+                    tv.setText("Please check internet connection");
+                }
+
             }
         });
+
+    }
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
     }
 
     FarmModel findFarm(String codeIsIn) {

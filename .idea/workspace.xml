@@ -19,15 +19,39 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8bac5664-1fce-4cd7-ab6d-7f44fa45ac0c" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/assetWizardSettings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/res/drawable/pinclipart_com_blue_clip_art_800346.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/res/drawable/pinpng_com_thumbs_up_icon_png_58274.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/fileHashes/resourceHashesCache.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/classAnalysis.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/jarAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/jarAnalysis.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/javaCompile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/taskHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/delaval_cowtaggingapp.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/delaval_cowtaggingapp.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/InsertCowIdPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/InsertCowIdPage.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/MenuPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/MenuPage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/OptionsPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/OptionsPage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/PinEnter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/PinEnter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/ScanningPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/ScanningPage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/SettingsPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/SettingsPage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/ThisApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/ThisApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/Util/FarmManagement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/Util/FarmManagement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/Util/ProfileConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/Util/ProfileConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/Util/ProfileModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/Util/ProfileModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/Util/TagSettings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pozyx/nfctool/Util/TagSettings.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_insert_cow_id_page.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_insert_cow_id_page.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_menu_page.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_menu_page.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_pin_enter.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_pin_enter.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_settings_page.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_settings_page.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,6 +82,7 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="ROOT_SYNC" value="SYNC" />
   </component>
   <component name="ProjectId" id="1WevIJ3WIPt6gcnVHJhn6AnBUS5" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -86,6 +111,9 @@
       <recent name="com.pozyx.nfctool" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.pozyx.nfctool" />
+    </key>
+    <key name="android.template.1556647159">
       <recent name="com.pozyx.nfctool" />
     </key>
     <key name="android.template.-172531905">
@@ -236,39 +264,42 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="2056" y="120" width="384" height="629" key="#com.intellij.ide.util.MemberChooser" timestamp="1593161949135">
-      <screen x="1366" y="0" width="1920" height="1080" />
+    <state x="491" y="113" width="334" height="430" key="#com.intellij.ide.util.MemberChooser" timestamp="1593685097265">
+      <screen x="0" y="31" width="1366" height="737" />
     </state>
-    <state x="2056" y="120" width="384" height="629" key="#com.intellij.ide.util.MemberChooser/0.31.1366.737/1366.0.1920.1080@1366.0.1920.1080" timestamp="1593161949135" />
+    <state x="491" y="113" width="334" height="430" key="#com.intellij.ide.util.MemberChooser/0.31.1366.737/1366.0.1920.1080@0.31.1366.737" timestamp="1593685097265" />
+    <state x="2056" y="120" width="384" height="629" key="#com.intellij.ide.util.MemberChooser/0.31.1366.737/1366.0.1920.1080@1366.0.1920.1080" timestamp="1593423230635" />
     <state x="491" y="113" width="384" height="580" key="#com.intellij.ide.util.MemberChooser/0.31.1366.737@0.31.1366.737" timestamp="1593124762246" />
-    <state x="2061" y="290" width="534" height="506" key="#com.intellij.refactoring.typeMigration.ui.FailedConversionsDialog" timestamp="1592924610235">
+    <state x="2061" y="290" width="534" height="506" key="#com.intellij.refactoring.typeMigration.ui.FailedConversionsDialog" timestamp="1593785478802">
       <screen x="1366" y="0" width="1920" height="1080" />
     </state>
-    <state x="2061" y="290" width="534" height="506" key="#com.intellij.refactoring.typeMigration.ui.FailedConversionsDialog/0.31.1366.737/1366.0.1920.1080@1366.0.1920.1080" timestamp="1592924610235" />
-    <state x="529" y="31" width="367" height="737" key="FileChooserDialogImpl" timestamp="1592856571522">
-      <screen x="0" y="31" width="1366" height="737" />
+    <state x="2061" y="290" width="534" height="506" key="#com.intellij.refactoring.typeMigration.ui.FailedConversionsDialog/0.31.1366.737/1366.0.1920.1080@1366.0.1920.1080" timestamp="1593785478802" />
+    <state x="2109" y="300" width="367" height="737" key="FileChooserDialogImpl" timestamp="1593608644338">
+      <screen x="1366" y="0" width="1920" height="1080" />
     </state>
-    <state x="2109" y="300" width="434" height="487" key="FileChooserDialogImpl/0.31.1366.737/1366.0.1920.1080@1366.0.1920.1080" timestamp="1592837265961" />
+    <state x="2109" y="300" width="434" height="487" key="FileChooserDialogImpl/0.31.1366.737/1366.0.1920.1080@1366.0.1920.1080" timestamp="1593608644338" />
     <state x="529" y="31" width="367" height="737" key="FileChooserDialogImpl/0.31.1366.737@0.31.1366.737" timestamp="1592856571522" />
-    <state x="441" y="283" key="com.intellij.ide.util.TipDialog" timestamp="1593155797448">
-      <screen x="0" y="31" width="1366" height="737" />
+    <state x="1986" y="370" key="com.intellij.ide.util.TipDialog" timestamp="1594020660880">
+      <screen x="1366" y="0" width="1920" height="1080" />
     </state>
-    <state x="441" y="283" key="com.intellij.ide.util.TipDialog/0.31.1366.737/1366.0.1920.1080@0.31.1366.737" timestamp="1593155797448" />
-    <state x="1986" y="370" key="com.intellij.ide.util.TipDialog/0.31.1366.737/1366.0.1920.1080@1366.0.1920.1080" timestamp="1592896571967" />
-    <state x="441" y="283" key="com.intellij.ide.util.TipDialog/0.31.1366.737@0.31.1366.737" timestamp="1593126977071" />
+    <state x="441" y="283" key="com.intellij.ide.util.TipDialog/0.31.1366.737/1366.0.1920.1080@0.31.1366.737" timestamp="1593587843801" />
+    <state x="1986" y="370" key="com.intellij.ide.util.TipDialog/0.31.1366.737/1366.0.1920.1080@1366.0.1920.1080" timestamp="1594020660880" />
+    <state x="441" y="283" key="com.intellij.ide.util.TipDialog/0.31.1366.737@0.31.1366.737" timestamp="1593459514617" />
     <state x="2024" y="168" width="609" height="750" key="refactoring.ChangeSignatureDialog" timestamp="1592905726396">
       <screen x="1366" y="0" width="1920" height="1080" />
     </state>
     <state x="2024" y="168" width="609" height="750" key="refactoring.ChangeSignatureDialog/0.31.1366.737/1366.0.1920.1080@1366.0.1920.1080" timestamp="1592905726396" />
-    <state x="440" y="200" key="run.anything.popup" timestamp="1593124755309">
-      <screen x="0" y="31" width="1366" height="737" />
-    </state>
-    <state x="1985" y="247" key="run.anything.popup/0.31.1366.737/1366.0.1920.1080@1366.0.1920.1080" timestamp="1592827089502" />
-    <state x="440" y="200" key="run.anything.popup/0.31.1366.737@0.31.1366.737" timestamp="1593124755309" />
-    <state x="1991" y="240" width="672" height="678" key="search.everywhere.popup" timestamp="1593088768858">
+    <state x="1985" y="247" key="run.anything.popup" timestamp="1593788464150">
       <screen x="1366" y="0" width="1920" height="1080" />
     </state>
-    <state x="1991" y="240" width="672" height="678" key="search.everywhere.popup/0.31.1366.737/1366.0.1920.1080@1366.0.1920.1080" timestamp="1593088768858" />
-    <state x="445" y="195" width="672" height="463" key="search.everywhere.popup/0.31.1366.737@0.31.1366.737" timestamp="1593024763494" />
+    <state x="440" y="89" width="672" height="677" key="run.anything.popup/0.31.1366.737/1366.0.1920.1080@0.31.1366.737" timestamp="1593682688146" />
+    <state x="1985" y="247" key="run.anything.popup/0.31.1366.737/1366.0.1920.1080@1366.0.1920.1080" timestamp="1593788464150" />
+    <state x="440" y="200" key="run.anything.popup/0.31.1366.737@0.31.1366.737" timestamp="1593465771165" />
+    <state x="1991" y="240" width="672" height="678" key="search.everywhere.popup" timestamp="1593785441215">
+      <screen x="1366" y="0" width="1920" height="1080" />
+    </state>
+    <state x="445" y="195" width="672" height="463" key="search.everywhere.popup/0.31.1366.737/1366.0.1920.1080@0.31.1366.737" timestamp="1593682677902" />
+    <state x="1991" y="240" width="672" height="678" key="search.everywhere.popup/0.31.1366.737/1366.0.1920.1080@1366.0.1920.1080" timestamp="1593785441215" />
+    <state x="445" y="195" width="672" height="463" key="search.everywhere.popup/0.31.1366.737@0.31.1366.737" timestamp="1593341258222" />
   </component>
 </project>
